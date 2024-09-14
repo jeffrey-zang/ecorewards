@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: 'If you clone and use this repo, please cite it as below.'
+authors:
+  - family-names: 'HackTheNorth-FakeWithPoints'
+    given-names: 'HackTheNorth-FakeWithPoints'
+title: 'PayWithPretendPointsAPI'
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2024-09-13
+url: 'https://github.com/HackTheNorth-FakeWithPoints/PayWithPretendPointsAPI'

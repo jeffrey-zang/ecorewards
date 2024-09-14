@@ -1,0 +1,11 @@
+# List of approvers/reviewers for https://github.com/HackTheNorth-FakeWithPoints/PayWithPretendPointsAPI
+
+# Get in touch with us via the HackTheNorth-FakeWithPoints Community
+# https://github.com/HackTheNorth-FakeWithPoints
+
+# Learn about CODEOWNERS file format:
+# https://help.github.com/en/articles/about-code-owners
+#
+
+* @BryanPeart @GeoffreyPeart @JackyTea @Sachin-c @szboynono @tapiwakundi
+/.github/ @BryanPeart @GeoffreyPeart @JackyTea @Sachin-c @szboynono @tapiwakundi

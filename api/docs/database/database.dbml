@@ -1,0 +1,50 @@
+// Renderer: https://dbdiagram.io
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table partners {
+  id integer
+  name string
+  address string
+  phone string
+  email string
+  password string
+  description string
+  status enum
+  permission enum
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table members {
+  id integer
+  name string
+  address string
+  phone string
+  email string
+  balance integer
+  status enum
+  created_at timestamp
+  updated_at timestamp
+  partner_id integer
+}
+
+Table transactions {
+  id integer
+  type enum
+  status enum
+  amount integer
+  reference uuid
+  note string
+  transacted_at timestamp
+  created_at timestamp
+  updated_at timestamp
+  partner_ref_id string
+  partner_id integer
+  member_id integer
+}
+
+Ref: partners.id < members.partner_id
+
+Ref: members.id < transactions.member_id
+
+Ref: partners.id < transactions.partner_id
