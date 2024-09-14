@@ -11,6 +11,72 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const rewards = [
+    {
+      id: 1,
+      name:"$10 Prepaid Visa",
+      points: 10000,
+      image: "https://via.placeholder.com/150",
+      description: "Get a $10 prepaid Visa gift card to spend on anything you want.",
+      category: "Gift Cards",
+    },
+    {
+      id: 2,
+      name: "25% off Beyond Meat",
+      points: 5000,
+      image: "https://via.placeholder.com/150",
+      description: "Get 25% off your next purchase of Beyond Meat products.",
+      category: "Food",
+    },
+    {
+      id: 3,
+      name: "Plant a tree",
+      points: 1000,
+      image: "https://via.placeholder.com/150",
+      description: "Plant a tree in a forest to help offset your carbon footprint.",
+      category: "Carbon Offsets",
+    },
+    {
+      id: 4,
+      name: "1 month of Netflix",
+      points: 5000,
+      image: "https://via.placeholder.com/150",
+      description: "Get 1 month of Netflix for free.",
+      category: "Entertainment",
+    },
+    {
+      id: 5,
+      name: "1 month of Spotify",
+      points: 5000,
+      image: "https://via.placeholder.com/150",
+      description: "Get 1 month of Spotify for free.",
+      category: "Entertainment",
+    },
+    {
+      id: 6,
+      name: "1 month of Amazon Prime",
+      points: 5000,
+      image: "https://via.placeholder.com/150",
+      description: "Get 1 month of Amazon Prime for free.",
+      category: "Entertainment",
+    },
+    {
+      id: 7,
+      name: "50 pack of Yes Straws",
+      points: 5000,
+      image: "https://via.placeholder.com/150",
+      description: "Get a 50 pack of Yes Straws to help reduce plastic waste.",
+      category: "Miscellaneous",
+    }
+  ]
+  const categorizedRewards = rewards.reduce((acc, reward) => {
+    if (!acc[reward.category]) {
+      acc[reward.category] = [];
+    }
+    acc[reward.category].push(reward);
+    return acc;
+  }
+  , {} as Record<string, typeof rewards>);
   return (
     <div className="flex flex-col items-center justify-center">
       {/* <div className="sticky top-0 w-full">
@@ -41,6 +107,23 @@ export default function Index() {
           <h1 className="text-4xl font-bold text-white">Carbon Offsets</h1>
           <p className="text-gray-300 text-sm mt-3">Offset your carbon footprint by redeeming your points to support projects that reduce greenhouse gas emissions like tree planting.</p>
           <button className="bg-green-600 text-white px-4 py-2 rounded-lg mt-4">Learn More &rarr;</button>
+        </div>
+        <div className="flex flex-col w-full mt-4">
+          {Object.entries(categorizedRewards).map(([category, rewards]) => (
+            <div key={category} className="flex flex-col w-full mt-4">
+              <h2 className="text-2xl font-bold">{category}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                {rewards.map(reward => (
+                  <div key={reward.id} className="rounded-lg bg-white shadow-md p-4">
+                    <img src={reward.image} alt={reward.name} className="w-full h-40 object-cover rounded-lg" />
+                    <h3 className="text-xl font-bold mt-2">{reward.name}</h3>
+                    <p className="text-gray-500 mt-1">{reward.description}</p>
+                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg mt-4">{reward.points.toLocaleString()} Points</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

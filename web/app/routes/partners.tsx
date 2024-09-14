@@ -13,12 +13,6 @@ export async function loader() {
       }
     }
   );
-  // const res = await fetch('http://localhost:3000/api/v1/health', {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   }
-  // })
 
   return json(await res.json());
 }

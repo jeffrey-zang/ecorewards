@@ -3,12 +3,11 @@ import { Leaf } from 'lucide-react';
 
 const streakDays: number = 10;
 
-export default function Streak() {
-    const streakDays = 5 // Get from API
+export default function Streak({streakDays} : {streakDays:number}) {
     const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
   
     return (
-      <div className="flex flex-col items-center bg-white rounded-lg p-6 shadow-md mb-6">
+      <div className="flex flex-col items-center bg-white rounded-lg p-6 mb-6">
         <div className="relative mb-4">
           <div className="bg-green-500 rounded-full w-24 h-24 flex items-center justify-center">
             <Leaf className="text-white w-16 h-16" />

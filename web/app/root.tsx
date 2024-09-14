@@ -1,9 +1,11 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
@@ -25,7 +27,16 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function loader() {
+  return json({
+    ENV: {
+      API_URL: process.env.API_URL
+    },
+  });
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const data = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -36,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="flex h-screen items-center justify-center relative">
         <div className="flex flex-col md:hidden w-full h-full">
-          <Header />
+          <Header points={0} />
           <div className="flex-1 overflow-auto py-4 px-8">
             {children}
           </div>
@@ -44,6 +55,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="hidden md:flex text-center">This site is designed for mobile devices only. Please visit from a mobile device to view this content.</div>
         <ScrollRestoration />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(
+              data.ENV
+            )}`,
+          }}
+        />
         <Scripts />
       </body>
     </html>
