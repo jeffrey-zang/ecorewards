@@ -8,6 +8,7 @@ import {
 import type { LinksFunction } from "@remix-run/node";
 
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 import "./tailwind.css";
 
@@ -33,10 +34,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="flex h-screen items-center justify-center">
+      <body className="flex h-screen items-center justify-center relative">
         <div className="flex flex-col md:hidden w-full h-full">
           <Header />
-          {children}
+          <div className="flex-1 overflow-auto py-4 px-8">
+            {children}
+          </div>
+          <Footer />
         </div>
         <div className="hidden md:flex text-center">This site is designed for mobile devices only. Please visit from a mobile device to view this content.</div>
         <ScrollRestoration />

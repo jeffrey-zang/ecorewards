@@ -82,7 +82,7 @@ import { getPointsSwagger } from '@/routes/points/index.ts'
 
   const swaggerDocument = generator.generateDocument({
     openapi: '3.0.0',
-    servers: [{ url: 'https://paywithpretendpointsapi.onrender.com' }],
+    servers: [{ url: 'http://localhost:5173' }],
     info: {
       version: process.env.npm_package_version as string,
       title: 'Pay With Pretend Points API',

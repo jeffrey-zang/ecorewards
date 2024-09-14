@@ -25,7 +25,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
         imgSrc: ["'self'", 'data:', 'https:'],
         fontSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.scalar.com'],
-        connectSrc: ["'self'", 'https://paywithpretendpointsapi.onrender.com/'],
+        connectSrc: ["'self'", 'http://localhost:5173'],
         objectSrc: ["'none'"],
         mediaSrc: ["'self'"],
         frameSrc: ["'none'"],
