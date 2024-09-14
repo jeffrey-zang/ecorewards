@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "remix vite:dev",
+    "dev": "remix vite:dev --host",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
@@ -15,6 +15,7 @@
     "@remix-run/react": "^2.12.0",
     "@remix-run/serve": "^2.12.0",
     "isbot": "^4.1.0",
+    "lucide-react": "^0.441.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

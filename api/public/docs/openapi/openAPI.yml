@@ -34,14 +34,14 @@ components:
         phone:
           type: string
           pattern: ^[\w\s.()-]+$
-          example: '4161234567'
+          example: "4161234567"
         email:
           type: string
           format: email
           example: example@email.com
         password:
           type: string
-          example: '*********'
+          example: "*********"
         status:
           type: string
           enum: &a4
@@ -98,7 +98,7 @@ components:
         phone:
           type: string
           pattern: ^[\w\s.()-]+$
-          example: '4161234567'
+          example: "4161234567"
         email:
           type: string
           format: email
@@ -205,7 +205,7 @@ paths:
         - Status
       summary: Check the health of the database.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -233,19 +233,19 @@ paths:
                   - status
                   - message
                   - error
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/auth:
     post:
@@ -265,12 +265,12 @@ paths:
                   example: example@email.com
                 password:
                   type: string
-                  example: '*********'
+                  example: "*********"
               required:
                 - email
                 - password
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -282,19 +282,19 @@ paths:
                     example: JWT Token
                 required:
                   - accessToken
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/admin-auth:
     post:
@@ -314,12 +314,12 @@ paths:
                   example: example@email.com
                 password:
                   type: string
-                  example: '*********'
+                  example: "*********"
               required:
                 - email
                 - password
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -331,19 +331,19 @@ paths:
                     example: JWT Token
                 required:
                   - accessToken
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/{memberId}/points:
     get:
@@ -362,7 +362,7 @@ paths:
           name: memberId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -374,19 +374,19 @@ paths:
                     example: 1000
                 required:
                   - balance
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/partners/{partnerId}/transactions/{transactionId}:
     get:
@@ -413,7 +413,7 @@ paths:
           name: transactionId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -483,19 +483,19 @@ paths:
                       - updatedAt
                 required:
                   - transaction
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/partners/{partnerId}/transactions:
     get:
@@ -514,7 +514,7 @@ paths:
           name: partnerId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -586,19 +586,19 @@ paths:
                         - updatedAt
                 required:
                   - transactions
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/{memberId}/transactions/{transactionId}:
     get:
@@ -625,7 +625,7 @@ paths:
           name: transactionId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -695,19 +695,19 @@ paths:
                       - updatedAt
                 required:
                   - transaction
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     patch:
       tags:
@@ -760,7 +760,7 @@ paths:
                   default: PAYMENT
                   example: PAYMENT
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -830,19 +830,19 @@ paths:
                       - updatedAt
                 required:
                   - transaction
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     delete:
       tags:
@@ -868,7 +868,7 @@ paths:
           name: transactionId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -880,19 +880,19 @@ paths:
                     example: 1
                 required:
                   - count
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/{memberId}/transactions:
     get:
@@ -911,7 +911,7 @@ paths:
           name: memberId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -983,19 +983,19 @@ paths:
                         - updatedAt
                 required:
                   - transactions
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     post:
       tags:
@@ -1037,7 +1037,7 @@ paths:
               required:
                 - amount
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1107,19 +1107,19 @@ paths:
                       - updatedAt
                 required:
                   - transaction
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/members/{memberId}:
     get:
@@ -1138,7 +1138,7 @@ paths:
           name: memberId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1169,7 +1169,7 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
@@ -1200,19 +1200,19 @@ paths:
                       - updatedAt
                 required:
                   - member
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     patch:
       tags:
@@ -1246,7 +1246,7 @@ paths:
                 phone:
                   type: string
                   pattern: ^[\w\s.()-]+$
-                  example: '4161234567'
+                  example: "4161234567"
                 email:
                   type: string
                   format: email
@@ -1260,7 +1260,7 @@ paths:
                   default: PENDING
                   example: PENDING
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1291,7 +1291,7 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
@@ -1322,19 +1322,19 @@ paths:
                       - updatedAt
                 required:
                   - member
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     delete:
       tags:
@@ -1352,7 +1352,7 @@ paths:
           name: memberId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1364,19 +1364,19 @@ paths:
                     example: 1
                 required:
                   - count
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/members:
     get:
@@ -1395,7 +1395,7 @@ paths:
           name: memberId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1428,7 +1428,7 @@ paths:
                         phone:
                           type: string
                           pattern: ^[\w\s.()-]+$
-                          example: '4161234567'
+                          example: "4161234567"
                         email:
                           type: string
                           format: email
@@ -1459,19 +1459,19 @@ paths:
                         - updatedAt
                 required:
                   - members
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     post:
       tags:
@@ -1496,7 +1496,7 @@ paths:
                 phone:
                   type: string
                   pattern: ^[\w\s.()-]+$
-                  example: '4161234567'
+                  example: "4161234567"
                 email:
                   type: string
                   format: email
@@ -1511,7 +1511,7 @@ paths:
                 - email
                 - balance
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1542,7 +1542,7 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
@@ -1573,19 +1573,19 @@ paths:
                       - updatedAt
                 required:
                   - member
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/partners/{partnerId}:
     get:
@@ -1604,7 +1604,7 @@ paths:
           name: partnerId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1634,14 +1634,14 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
                         example: example@email.com
                       password:
                         type: string
-                        example: '*********'
+                        example: "*********"
                       status:
                         type: string
                         enum: *a4
@@ -1670,19 +1670,19 @@ paths:
                       - updatedAt
                 required:
                   - partner
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     patch:
       tags:
@@ -1720,14 +1720,14 @@ paths:
                 phone:
                   type: string
                   pattern: ^[\w\s.()-]+$
-                  example: '4161234567'
+                  example: "4161234567"
                 email:
                   type: string
                   format: email
                   example: example@email.com
                 password:
                   type: string
-                  example: '*********'
+                  example: "*********"
                 status:
                   type: string
                   enum: *a4
@@ -1739,7 +1739,7 @@ paths:
                   default: WRITE
                   example: WRITE
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1769,14 +1769,14 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
                         example: example@email.com
                       password:
                         type: string
-                        example: '*********'
+                        example: "*********"
                       status:
                         type: string
                         enum: *a4
@@ -1805,19 +1805,19 @@ paths:
                       - updatedAt
                 required:
                   - partner
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     delete:
       tags:
@@ -1835,7 +1835,7 @@ paths:
           name: partnerId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1847,19 +1847,19 @@ paths:
                     example: 1
                 required:
                   - count
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
   /api/v1/loyalty/partners:
     get:
@@ -1878,7 +1878,7 @@ paths:
           name: partnerId
           in: path
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -1910,14 +1910,14 @@ paths:
                         phone:
                           type: string
                           pattern: ^[\w\s.()-]+$
-                          example: '4161234567'
+                          example: "4161234567"
                         email:
                           type: string
                           format: email
                           example: example@email.com
                         password:
                           type: string
-                          example: '*********'
+                          example: "*********"
                         status:
                           type: string
                           enum: *a4
@@ -1946,19 +1946,19 @@ paths:
                         - updatedAt
                 required:
                   - partners
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable
     post:
       tags:
@@ -1987,14 +1987,14 @@ paths:
                 phone:
                   type: string
                   pattern: ^[\w\s.()-]+$
-                  example: '4161234567'
+                  example: "4161234567"
                 email:
                   type: string
                   format: email
                   example: example@email.com
                 password:
                   type: string
-                  example: '*********'
+                  example: "*********"
                 status:
                   type: string
                   enum: *a4
@@ -2008,7 +2008,7 @@ paths:
                 - email
                 - password
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -2038,14 +2038,14 @@ paths:
                       phone:
                         type: string
                         pattern: ^[\w\s.()-]+$
-                        example: '4161234567'
+                        example: "4161234567"
                       email:
                         type: string
                         format: email
                         example: example@email.com
                       password:
                         type: string
-                        example: '*********'
+                        example: "*********"
                       status:
                         type: string
                         enum: *a4
@@ -2074,17 +2074,17 @@ paths:
                       - updatedAt
                 required:
                   - partner
-        '204':
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request
-        '401':
+        "401":
           description: Unauthorized
-        '403':
+        "403":
           description: Forbidden
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-        '503':
+        "503":
           description: Service Unavailable

@@ -7,6 +7,8 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
+import Header from "./components/Header";
+
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -31,8 +33,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="flex h-screen items-center justify-center">
+        <div className="flex flex-col md:hidden w-full h-full">
+          <Header />
+          {children}
+        </div>
+        <div className="hidden md:flex text-center">This site is designed for mobile devices only. Please visit from a mobile device to view this content.</div>
         <ScrollRestoration />
         <Scripts />
       </body>

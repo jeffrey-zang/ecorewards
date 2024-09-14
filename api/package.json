@@ -24,13 +24,13 @@
   },
   "scripts": {
     "start": "node ./dist/index.cjs",
-    "dev": "npx tsx watch src/index.ts",
-    "build": "npx tsup src/index.ts --minify",
-    "swagger": "npx tsx src/swagger/swagger.ts",
-    "migrate": "npx sequelize-cli db:migrate",
-    "migrate:revert": "npx sequelize-cli db:migrate:undo:all",
-    "validate": "npx prettier --check . && npx eslint . && npx tsc && npm run build",
-    "format": "npm run swagger && npx prettier --write . && npx eslint --fix . && npx tsc && npm run build"
+    "dev": "bunx tsx watch src/index.ts",
+    "build": "bunx tsup src/index.ts --minify",
+    "swagger": "bunx tsx src/swagger/swagger.ts",
+    "migrate": "bunx sequelize-cli db:migrate",
+    "migrate:revert": "bunx sequelize-cli db:migrate:undo:all",
+    "validate": "bunx prettier --check . && bunx eslint . && bunx tsc && bun run build",
+    "format": "bun run swagger && bunx prettier --write . && bunx eslint --fix . && bunx tsc && bun run build"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.1.1",
