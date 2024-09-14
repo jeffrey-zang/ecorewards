@@ -4,6 +4,8 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
 
+import TreesImage from "~/assets/trees.webp";
+
 export const meta: MetaFunction = () => {
   return [{ title: "EcoRewards" }, { name: "description", content: "asdfasd" }];
 };
@@ -29,13 +31,23 @@ export default function Index() {
           />
         </div>
       </div> */}
-      <SearchBar className="sticky top-0 w-full" />
-      <div className="h-screen"></div>
+      <SearchBar className="relative w-full" />
+      <div className="flex flex-col w-full mt-4 h-screen">
+        <div className="rounded-lg w-full p-8" style={{
+            backgroundImage: `url(${TreesImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+        }}>
+          <h1 className="text-4xl font-bold text-white">Carbon Offsets</h1>
+          <p className="text-gray-300 text-sm mt-3">Offset your carbon footprint by redeeming your points to support projects that reduce greenhouse gas emissions like tree planting.</p>
+          <button className="bg-green-600 text-white px-4 py-2 rounded-lg mt-4">Learn More &rarr;</button>
+        </div>
+      </div>
     </div>
   );
 }
 
-function SearchBar(props: any) {
+function SearchBar(props: React.HTMLAttributes<HTMLElement>) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
@@ -55,7 +67,7 @@ function SearchBar(props: any) {
     <form className="relative top-0 w-full" onSubmit={handleFormSubmit} {...props}>
       <Input
         className="w-full"
-        placeholder="Search"
+        placeholder="What are you looking for?"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
