@@ -56,7 +56,9 @@ const postMemberTransactionController = async (
 
     const member = await verifyMemberState(partnerId, memberId, sequelizeTransaction)
 
-    if (member.balance + transactionPayload.amount < 0) {
+    console.log("balance", member.balance, transactionPayload.amount);
+
+    if (member.balance - transactionPayload.amount < 0) {
       throw new ValidationError('Member balance cannot go below zero!')
     }
 
@@ -71,7 +73,7 @@ const postMemberTransactionController = async (
       memberId,
       {
         ...member,
-        balance: member.balance + transaction.amount
+        balance: member.balance - transaction.amount
       },
       sequelizeTransaction
     )

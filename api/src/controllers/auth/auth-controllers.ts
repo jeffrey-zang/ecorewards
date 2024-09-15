@@ -60,14 +60,14 @@ const userSignupController = async (name: string, email: string, password: strin
   // const user = await Member.create({ email, password: hashedPassword, animal, balance: 0 });
 
   // add user to our "partner" id 1
-  const user = await addMember(1, { name, email, password: hashedPassword, animal, balance: 0 });
+  const user = await addMember(1, { name, email, password: hashedPassword, animal, balance: 0, status: "ACTIVE" });
 
   // return { message: 'User created successfully', user };
 
   const token = jwt.sign(
     { id: user.id, name: user.name, email: user.email, balance: user.balance, animal: user.animal, createdAt: user.createdAt, updatedAt: user.updatedAt },
     process.env.JWT_SECRET as jwt.Secret,
-    { expiresIn: '30m' }
+    { expiresIn: '3d' }
   );
 
   return { token };
@@ -87,7 +87,7 @@ const userLoginController = async (email: string, password: string) => {
   const token = jwt.sign(
     { id: user.id, name: user.name, email: user.email, balance: user.balance, animal: user.animal, createdAt: user.createdAt, updatedAt: user.updatedAt },
     process.env.JWT_SECRET as jwt.Secret,
-    { expiresIn: '30m' }
+    { expiresIn: '3d' }
   );
 
   return { token };

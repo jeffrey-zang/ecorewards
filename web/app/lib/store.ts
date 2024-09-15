@@ -4,6 +4,8 @@ import { createJSONStorage, devtools, persist, PersistStorage } from 'zustand/mi
 interface BalanceState {
   balance: number
   setBal: (bal: number) => void
+  memberId: number | null
+  setMemberId: (id: number | null) => void
 }
 
 // const dummyStorage: PersistStorage<BalanceState> = {
@@ -17,6 +19,8 @@ export const useBalanceStore = create<BalanceState>()(devtools(
     (set) => ({
       balance: 0,
       setBal: (bal: number) => set(() => ({ balance: bal })),
+      memberId: null,
+      setMemberId: (id: number | null) => set(() => ({ memberId: id })),
     }),
     { name: 'balanceStore' }
   ))

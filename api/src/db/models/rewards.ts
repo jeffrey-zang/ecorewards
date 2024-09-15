@@ -15,7 +15,7 @@ interface RewardsAttributes {
   description: string;
   company: string;
   category: string;
-  partnerId: number;
+  // partnerId: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,7 +30,7 @@ class Rewards extends Model<RewardsAttributes, RewardsCreationAttributes> {
   declare description: string;
   declare company: string;
   declare category: string;
-  declare partnerId: number;
+  // declare partnerId: number;
   declare createdAt: Date;
   declare updatedAt: Date;
 
@@ -94,11 +94,11 @@ Rewards.init(
       allowNull: false,
       field: 'category'
     },
-    partnerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: 'partner_id'
-    },
+    // partnerId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   field: 'partnerId'
+    // },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -106,7 +106,7 @@ Rewards.init(
       validate: {
         isDate: true
       },
-      field: 'created_at'
+      field: 'createdAt'
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -115,12 +115,12 @@ Rewards.init(
       validate: {
         isDate: true
       },
-      field: 'updated_at'
+      field: 'updatedAt'
     }
   },
   {
     modelName: 'rewards',
-    tableName: 'rewards',
+    tableName: 'Rewards',
     timestamps: true,
     sequelize
   }

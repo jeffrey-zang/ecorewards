@@ -17,7 +17,8 @@ const ecoAchievementNames = [
 
   const generateMilestones = (points : number) => {
     const milestones = [];
-    const baseMilestone = Math.ceil(points / 100) * 100;
+    // const baseMilestone = Math.ceil(points / 100) * 100;
+    const baseMilestone = 0;
   
     for (let i = 0; i < 5; i++) {
       const milestonePoints = baseMilestone + ((i + 1) * 100);
@@ -34,7 +35,7 @@ const ecoAchievementNames = [
   
     return milestones;
   };
-
+  
 export default function MilestonesList({points} : {points:number}) {
     const milestones = generateMilestones(points)
   return (

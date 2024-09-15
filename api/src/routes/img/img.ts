@@ -1,9 +1,14 @@
 import express, { type Request, type Response } from 'express';
 import { logger } from '@/logger/index.ts';
-import { handleError } from '@/utils/index.ts';
+import { handleError, InternalServerError, runAsTransaction, ValidationError } from '@/utils/index.ts';
 import OpenAI from 'openai';
 import { memberAuthMiddleware } from '@/middleware/partner-auth.ts';
 import { Member } from '@/db/models/member.ts';
+import { postMemberTransactionController } from '@/controllers/member-transactions/index.ts';
+import { TransactionCreationAttributes } from '@/db/models/index.ts';
+import { addTransaction, countTransactions } from '@/db/providers/index.ts';
+import { verifyMemberState, verifyPartnerState } from '@/controllers/utils/index.ts';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -58,12 +63,44 @@ router.post('/img', memberAuthMiddleware, async (req: Request, res: Response) =>
 
 
     const jsonResponse = JSON.parse(response.choices[0].message.content ?? '{"receipt": false}');
-    // points = 10% of the sponsored cost where 100 points = $1
-    jsonResponse.points = Math.round(jsonResponse.sponsoredCost * 100 * 0.10);
+    jsonResponse.points = Math.round(jsonResponse.sponsoredCost * 100);
 
     if (jsonResponse.points && jsonResponse.points > 0) {
       // update user points by adding the points
-      const member = await Member.increment('balance', { by: jsonResponse.points, where: { id: req.memberId } });
+      await Member.increment('balance', { by: jsonResponse.points, where: { id: req.memberId } });
+      const memberId = req.memberId!;
+      const transactionPayload = {
+        category: "Receipt",
+        description: `Used public transit`,
+        points: 1000,
+        // amount: 5000,
+        rewardId: 11,
+        amount: -1000,
+      } as TransactionCreationAttributes;
+  
+      await runAsTransaction(async (sequelizeTransaction: SequelizeTransaction) => {
+        const transactionsCount = await countTransactions({}, 1, memberId, sequelizeTransaction)
+    
+        if (transactionsCount >= parseInt(process.env.MAX_TRANSACTIONS_PER_MEMBER as string)) {
+          throw new ValidationError(`You have reached the max amount of transactions for partner with id of ${1}`)
+        }
+    
+        await verifyPartnerState(1, sequelizeTransaction)
+    
+        const member = await verifyMemberState(1, memberId, sequelizeTransaction)
+    
+        console.log("balance", member.balance, transactionPayload.amount);
+    
+        if (member.balance - transactionPayload.amount < 0) {
+          throw new ValidationError('Member balance cannot go below zero!')
+        }
+    
+        const transaction = await addTransaction(1, memberId, transactionPayload, sequelizeTransaction)
+    
+        if (!transaction) {
+          throw new InternalServerError('Transaction could not be created!')
+        }
+      });
     }
 
     // logger.info('[/img]: GPT parsing succeeded');

@@ -9,18 +9,19 @@ import {
 } from '@/controllers/member-transactions/index.ts'
 import { TransactionCreationAttributes } from '@/db/models/index.ts'
 import { logger } from '@/logger/index.ts'
-import { partnerAuthMiddleware } from '@/middleware/index.ts'
+import { memberAuthMiddleware, partnerAuthMiddleware } from '@/middleware/index.ts'
 import { patchTransaction, postTransaction } from '@/routes/member-transactions/index.ts'
 import { memberIdSchema, memberIdTransactionIdSchema } from '@/routes/utils/index.ts'
 import { handleError } from '@/utils/index.ts'
 
 const router = express.Router()
 
-router.get('/loyalty/:memberId/transactions', partnerAuthMiddleware, async (req: Request, res: Response) => {
+router.get('/loyalty/:memberId/transactions', memberAuthMiddleware, async (req: Request, res: Response) => {
   try {
-    const { memberId } = memberIdSchema.parse(req.params)
+    // const { memberId } = memberIdSchema.parse(req.params)
+    const memberId = req.memberId;
 
-    const transactions = await getMemberTransactionsController(req.partnerId as number, memberId)
+    const transactions = await getMemberTransactionsController(1, memberId);
 
     logger.info(`[/loyalty/${memberId}/transactions]: successfully retrieved transactions`)
 
@@ -54,13 +55,14 @@ router.get(
   }
 )
 
-router.post('/loyalty/:memberId/transactions', partnerAuthMiddleware, async (req: Request, res: Response) => {
+router.post('/loyalty/:memberId/transactions', memberAuthMiddleware, async (req: Request, res: Response) => {
   try {
-    const { memberId } = memberIdSchema.parse(req.params)
+    // const { memberId } = memberIdSchema.parse(req.params)
+    const memberId = req.memberId!;
     const transactionPayload = postTransaction.parse(req.body)
 
     const transaction = await postMemberTransactionController(
-      req.partnerId as number,
+      1, // only partner
       memberId,
       transactionPayload as TransactionCreationAttributes
     )

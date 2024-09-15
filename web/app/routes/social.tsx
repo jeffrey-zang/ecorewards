@@ -1,78 +1,101 @@
-import { useState } from 'react'
-import { Button } from "~/components/ui/button"
-import { ScrollArea } from "~/components/ui/scroll-area"
-import { Trophy, ChevronUp, ChevronDown } from 'lucide-react'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
+import { Trophy } from "lucide-react"
+import { useNavigate } from "@remix-run/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-// Mock data for the leaderboard
-const leaderboardData = [
-  { id: 1, name: "Alice", animal: "eagle", points: 1200 },
-  { id: 2, name: "Bob", animal: "wolf", points: 1150 },
-  { id: 3, name: "Charlie", animal: "squirrel", points: 1100 },
-  { id: 4, name: "David", animal: "bird", points: 1050 },
-  { id: 5, name: "Eve", animal: "turtle", points: 1000 },
-  { id: 6, name: "Frank", animal: "eagle", points: 950 },
-  { id: 7, name: "Grace", animal: "wolf", points: 900 },
-  { id: 8, name: "Henry", animal: "squirrel", points: 850 },
-  { id: 9, name: "Ivy", animal: "bird", points: 800 },
-  { id: 10, name: "Jack", animal: "turtle", points: 750 },
-]
-
-const animalEmojis: { [key: string]: string } = {
-  turtle: "🐢",
-  squirrel: "🐿️",
-  bird: "🐦",
-  wolf: "🐺",
-  eagle: "🦅",
+type User = {
+  name: string;
+  points: number;
 }
 
+function getAnimalEmoji(animal: string): string {
+  const emojiMap: Record<string, string> = {
+    Turtle: "🐢",
+    Squirrel: "🐿️",
+    Bird: "🐦",
+    Wolf: "🐺",
+    Eagle: "🦅",
+  };
+
+  return emojiMap[animal] || "❓";
+}
+
+// Example usage:
+const animalEmoji = getAnimalEmoji("Turtle");
+console.log(animalEmoji); // Outputs: 🐢
+
 export default function Component() {
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
-  const sortedData = [...leaderboardData].sort((a, b) => 
-    sortOrder === 'desc' ? b.points - a.points : a.points - b.points
-  )
-  const maxPoints = Math.max(...sortedData.map(user => user.points))
+  const navigate = useNavigate();
+  const [lb, setLb] = useState<any[]>([]);
+
+  const fetched = useRef<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tk = localStorage.getItem("accessToken");
+      if (!tk) {
+        navigate("/login");
+        return;
+      }
+
+      const res = await fetch(window.ENV.API_URL + "/api/v1/loyalty/leaderboard");
+      // console.log(await res.json())
+      setLb(await res.json());
+    };
+
+    if (fetched && !fetched.current) {
+      fetched.current = true;
+      fetchData();
+    }
+  }, []);
+
+  // const users: User[] = [
+  //   { name: "Charlie", points: 1200 },
+  //   { name: "Eve", points: 1100 },
+  //   { name: "Alice", points: 1000 },
+  //   { name: "David", points: 950 },
+  //   { name: "Bob", points: 850 },
+  // ];
+
+  // Sort users by points in descending order
+  const sortedUsers = useMemo(() => [...lb].sort((a, b) => b.points - a.points), [lb]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="p-6 bg-green-600 text-white">
-          <h1 className="text-2xl font-bold flex items-center justify-center">
-            <Trophy className="mr-2" /> Eco Leaderboard
-          </h1>
-        </div>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-green-800">Weekly Rankings</h2>
-            <Button
-              variant="outline"
-              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-              className="text-green-600 border-green-600 hover:bg-green-50"
-            >
-              {sortOrder === 'desc' ? <ChevronDown className="mr-2" /> : <ChevronUp className="mr-2" />}
-              {sortOrder === 'desc' ? 'Highest First' : 'Lowest First'}
-            </Button>
-          </div>
-          <ScrollArea className="h-[60vh]">
-            {sortedData.map((user, index) => (
-              <div key={user.id} className="mb-4 last:mb-0">
-                <div className="flex items-center mb-1">
-                  <span className="text-md font-semibold text-green-800 w-8">{index + 1}.</span>
-                  <span className="text-md font-medium flex-grow">{user.name}</span>
-                  <span className="text-md font-semibold text-green-600">{user.points} pts</span>
-                </div>
-                <div className="relative h-12 bg-green-100 rounded-full overflow-hidden">
-                  <div 
-                    className="absolute top-0 left-0 h-full bg-green-300 rounded-full flex items-center justify-end pr-2 transition-all duration-500 ease-out"
-                    style={{ width: `${(user.points / maxPoints) * 100}%` }}
-                  >
-                    <span className="text-2xl">{animalEmojis[user.animal]}</span>
-                  </div>
-                </div>
-              </div>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Global Point Leaderboard</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[50px] text-center">Rank</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead className="text-right">Points</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedUsers.map((user, index) => (
+              <TableRow key={user.name}>
+                <TableCell className="text-center font-medium">
+                  {index < 3 ? (
+                    <Trophy className={`inline-block w-5 h-5 ${
+                      index === 0 ? 'text-yellow-400' :
+                      index === 1 ? 'text-gray-400' :
+                      'text-yellow-700'
+                    }`} />
+                  ) : (
+                    index + 1
+                  )}
+                </TableCell>
+                <TableCell>{user.name} {getAnimalEmoji(user.animal)}</TableCell>
+                <TableCell className="text-right">{user.balance}</TableCell>
+              </TableRow>
             ))}
-          </ScrollArea>
-        </div>
-      </div>
-    </div>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   )
 }

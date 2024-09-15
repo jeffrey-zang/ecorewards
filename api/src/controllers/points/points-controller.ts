@@ -20,4 +20,5 @@ const getPointsController = (memberId: number) => {
   })
 }
 
+
 export { getPointsController }

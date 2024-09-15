@@ -257,6 +257,7 @@ const WebcamComponent = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [captured, setCaptured] = useState<boolean>(false);
 
   useEffect(() => {
     const startWebcam = async (deviceId: string | undefined = undefined) => {
@@ -291,7 +292,7 @@ const WebcamComponent = ({
       setLoading(false);
     };
 
-    startWebcam(deviceId);
+    startWebcam(deviceId as any);
 
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
@@ -311,6 +312,8 @@ const WebcamComponent = ({
     const video = videoRef.current;
 
     toast.success("Captured! Processing...");
+
+    setCaptured(true);
 
     if (video) {
       const canvas = document.createElement("canvas");
@@ -341,6 +344,7 @@ const WebcamComponent = ({
 
           if (!apiResponse.ok) {
             toast.error("Failed to upload image");
+            setCaptured(false);
             throw new Error("Failed to upload image");
           }
 
@@ -351,11 +355,13 @@ const WebcamComponent = ({
 
           if (!data.receipt) {
             toast.error("No receipt found in image. Please try again.");
+            setCaptured(false);
             return;
           }
 
           onScan(data);
         } catch (uploadError) {
+          setCaptured(false);
           console.error("Error uploading image:", uploadError);
           toast.error("Error uploading image");
         }
@@ -398,7 +404,7 @@ const WebcamComponent = ({
         className="hover:opacity-90 cursor-pointer transition-opacity"
       />
 
-      <button className="bg-green-100 p-2 rounded-lg mt-4 hover:bg-green-200 transition-colors" onClick={captureImage}>Capture</button>
+      <button className="bg-green-100 p-2 rounded-lg mt-4 hover:bg-green-200 transition-colors" onClick={captureImage} disabled={captured}>Capture</button>
 
       {/* Device Selector */}
 

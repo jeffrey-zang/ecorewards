@@ -6,9 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -21,6 +22,7 @@ import { Toaster } from 'sonner'
 import "./tailwind.css";
 import { useBalanceStore } from "~/lib/store";
 import { jwtDecode } from "jwt-decode";
+import { cn } from "./lib/utils";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,11 +49,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const data = useLoaderData<typeof loader>();
   const [receiptData, setReceiptData] = useState<IReceiptData|null>(null);
   const setBal = useBalanceStore(state => state.setBal);
+  const setMemberId = useBalanceStore(state => state.setMemberId);
+  const location = useLocation();
 
   useEffect(() => {
     const tk = localStorage.getItem("accessToken");
     if (tk) {
       const decoded = jwtDecode(tk);
+
+      // @ts-ignore
+      setMemberId(decoded.id);
+
+      console.log("DECODING");
       
       // @ts-ignore
       fetch(window.ENV.API_URL + `/api/v1/loyalty/${decoded.id}/points`, {
@@ -60,11 +69,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
           'Authorization': "Bearer " + tk
         }
       }).then((res) => res.json()).then((res) => {
-        console.log(res);
         setBal(res.balance);
       });
     }
   }, [receiptData]);
+
+  // console.log("location.pathname", location.pathname);
   
   return (
     <html lang="en">
@@ -79,7 +89,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col md:hidden w-full h-full">
           <Header />
           {receiptData ? <Result className="min-h-full flex-1 overflow-auto" receiptData={receiptData} onClose={() => setReceiptData(null)} /> : 
-          <div className="flex-1 overflow-auto py-4 px-8">
+          <div className={cn("flex-1 overflow-auto py-4", {
+            "px-8": location.pathname !== "/history"
+          })}>
             {children}
           </div>
             }

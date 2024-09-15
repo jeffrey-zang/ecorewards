@@ -33,7 +33,7 @@ export default function Result({ receiptData, onClose, className }: { receiptDat
           className="w-full bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 mb-4"
           onClick={() => {onClose()}}
         >
-          Claim Your Eco Reward
+          Go back to main menu
           <ChevronRight className="w-5 h-5 ml-2" />
         </Button>
 
@@ -108,12 +108,12 @@ export default function Result({ receiptData, onClose, className }: { receiptDat
         ))}
       </div>
       
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes float {
           0% { transform: translateY(0px); }
           100% { transform: translateY(-100vh); }
         }
-      `}</style>
+      `}</style> */}
     </div>
   )
 }

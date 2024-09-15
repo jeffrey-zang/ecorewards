@@ -22,8 +22,6 @@ export const meta: MetaFunction = () => {
 
 export default function Profile(props: any) {
   const [profileData, setProfileData] = useState<any>({});
-  const balance = useBalanceStore((state) => state.balance);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +38,8 @@ export default function Profile(props: any) {
 
     fetchData();
   }, []);
+
+  const balance = useBalanceStore((state) => state.balance);
 
   return (
     <Card>
