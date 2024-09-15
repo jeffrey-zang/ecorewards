@@ -2,14 +2,15 @@
 import { Home, Users, Wallet, CircleUserRound } from "lucide-react";
 import { Link, useLocation } from "@remix-run/react";
 import ScanDialog from "~/components/Dialog";
+import IReceiptData from "~/types/IReceiptData";
 // import Webcam from "react-webcam";
 // import { ClientOnly } from "remix-utils/client-only";
 
-function Footer() {
+function Footer({ onScan }: { onScan: (data: IReceiptData) => void }) {
   const location = useLocation();
   const currentPath = location.pathname;
   return (
-    <footer className="sticky bottom-0 bg-white border-t border-gray-200">
+    <footer className="sticky bottom-0 bg-white border-t border-gray-200 z-50">
       <div className="flex justify-around items-end px-4 py-4">
         <Link to="/" className="flex flex-col items-center">
           <Home
@@ -45,7 +46,7 @@ function Footer() {
           />
           <span className="text-xs mt-1 text-gray-500 sr-only">Profile</span>
         </Link>
-        <ScanDialog />
+        <ScanDialog onScan={onScan} />
       </div>
     </footer>
   );

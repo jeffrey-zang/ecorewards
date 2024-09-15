@@ -8,9 +8,13 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
+import React, { useState } from "react";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Result from "./components/Scan/Result";
+
+import IReceiptData from "~/types/IReceiptData";
 
 import "./tailwind.css";
 
@@ -37,6 +41,7 @@ export async function loader() {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useLoaderData<typeof loader>();
+  const [receiptData, setReceiptData] = useState<IReceiptData|null>(null);
   return (
     <html lang="en">
       <head>
@@ -48,10 +53,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="flex h-screen items-center justify-center relative">
         <div className="flex flex-col md:hidden w-full h-full">
           <Header points={0} />
+          {receiptData ? <Result className="min-h-full flex-1 overflow-auto" receiptData={receiptData} onClose={() => setReceiptData(null)} /> : 
           <div className="flex-1 overflow-auto py-4 px-8">
             {children}
           </div>
-          <Footer />
+            }
+          <Footer onScan={(data) => setReceiptData(data)} />
         </div>
         <div className="hidden md:flex text-center">This site is designed for mobile devices only. Please visit from a mobile device to view this content.</div>
         <ScrollRestoration />

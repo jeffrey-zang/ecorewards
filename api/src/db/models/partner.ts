@@ -84,7 +84,6 @@ Partner.init(
       allowNull: false,
       validate: {
         is: nameRegex,
-        len: [2, 50]
       },
       field: 'name'
     },
@@ -93,7 +92,6 @@ Partner.init(
       allowNull: false,
       validate: {
         is: textRegex,
-        len: [2, 500]
       },
       field: 'description'
     },
@@ -102,7 +100,6 @@ Partner.init(
       allowNull: false,
       validate: {
         is: addressRegex,
-        len: [2, 255]
       },
       field: 'address'
     },
@@ -111,7 +108,6 @@ Partner.init(
       allowNull: false,
       validate: {
         is: phoneRegex,
-        len: [2, 25]
       },
       field: 'phone'
     },
@@ -138,7 +134,6 @@ Partner.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: /\$2[ayb]\$.{56}/gi
       },
       field: 'password'
     },

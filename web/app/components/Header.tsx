@@ -2,7 +2,7 @@ import React from "react";
 
 function Header({points} : {points : number}) {
   return (
-    <header className="flex justify-between items-center p-4 bg-white text-green-600 border-b border-gray-200 sticky top-0">
+    <header className="flex justify-between items-center p-4 bg-white text-green-600 border-b border-gray-200 sticky top-0 z-50">
       <Profile className="size-8"/>
       <h1 className="text-xl font-bold absolute left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-green-700 text-transparent bg-clip-text">EcoRewards</h1>
       <div className="flex items-center bg-green-100 rounded-full px-3 py-1">

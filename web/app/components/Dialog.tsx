@@ -11,6 +11,8 @@ import {
 
 import React, { useEffect, useRef, useState } from "react";
 
+import IReceiptData from "~/types/IReceiptData";
+
 declare global {
   interface Window {
     ENV: {
@@ -21,9 +23,10 @@ declare global {
 import { Camera } from "lucide-react";
 import { json } from "@remix-run/react";
 
-function ScanDialog() {
+function ScanDialog({ onScan }: {onScan: (data: IReceiptData) => void}) {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className="absolute left-1/2 -translate-x-1/2 -top-3 p-1 bg-white rounded-full shadow-[0_-3px_3px_-3px_rgba(0,0,0,0.25)]">
           <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center">
@@ -40,7 +43,10 @@ function ScanDialog() {
             <DialogDescription></DialogDescription>
           </DialogHeader>
         <div className="flex items-center w-full h-screen">
-          <WebcamComponent />
+          <WebcamComponent onScan={(data) => {
+            onScan(data);
+            setOpen(false);
+          }} />
         </div>
         <DialogFooter className="sm:justify-start"></DialogFooter>
       </DialogContent>
@@ -48,7 +54,7 @@ function ScanDialog() {
   );
 }
 
-const WebcamComponent: React.FC = () => {
+const WebcamComponent = ({ onScan }: { onScan: (data: IReceiptData) => void }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,6 +129,11 @@ const WebcamComponent: React.FC = () => {
           }
 
           console.log('Image uploaded successfully');
+
+          const data = await apiResponse.json();
+          console.log(data);
+
+          onScan(data);
         } catch (uploadError) {
           console.error('Error uploading image:', uploadError);
         }

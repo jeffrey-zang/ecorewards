@@ -16,6 +16,12 @@ export default {
       },
     },
     extend: {
+      keyframes: {
+        float: {
+          '0%': { transform: 'translateY(0px)' },
+          '100%': { transform: 'translateY(-100vh)' },
+        },
+      },
       fontFamily: {
         sans: [
           '"Inter"',
