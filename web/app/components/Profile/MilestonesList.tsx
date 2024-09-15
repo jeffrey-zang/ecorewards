@@ -20,14 +20,15 @@ const ecoAchievementNames = [
     const baseMilestone = Math.ceil(points / 100) * 100;
   
     for (let i = 0; i < 5; i++) {
-      const milestonePoints = baseMilestone + (i * 100);
+      const milestonePoints = baseMilestone + ((i + 1) * 100);
   
       const name = ecoAchievementNames[i % ecoAchievementNames.length];
   
       milestones.push({
         name,
         neededPoints: milestonePoints,
-        completed: points >= milestonePoints
+        completed: points >= milestonePoints,
+        points: milestonePoints,
       });
     }
   
@@ -49,12 +50,12 @@ export default function MilestonesList({points} : {points:number}) {
           {milestones?.map((milestone, index) => (
             <li key={index} className="flex items-center">
               <div className="flex-1">
-                <p className={`font-medium ${milestone?.completed ? 'text-green-600' : ''}`}>
+                <p className={`font-medium ${milestone.completed ? 'text-green-600' : ''}`}>
                   {milestone?.name}
                 </p>
-                <Progress value={milestone?.completed ? 100 : 50} className="h-2 mt-1" />
+                <Progress value={Math.floor(points/milestone.neededPoints * 100)} className="h-2 mt-1" />
               </div>
-              <span className={`ml-2 text-sm ${milestone?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>
+              <span className={`ml-2 text-sm ${milestone.completed ? 'text-green-600' : 'text-muted-foreground'}`}>
                 {milestone?.neededPoints || 0} pts
               </span>
             </li>

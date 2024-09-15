@@ -12,7 +12,7 @@ function Footer({ onScan }: { onScan: (data: IReceiptData) => void }) {
   return (
     <footer className="sticky bottom-0 bg-white border-t border-gray-200 z-50">
       <div className="flex justify-around items-end px-4 py-4">
-        <Link to="/" className="flex flex-col items-center">
+        <Link to="/" className="flex flex-col items-center hover:opacity-60 transition-opacity">
           <Home
             className={`h-6 w-6 ${
               currentPath === "/" ? "text-green-600" : "text-gray-500"
@@ -20,7 +20,7 @@ function Footer({ onScan }: { onScan: (data: IReceiptData) => void }) {
           />
           <span className="text-xs mt-1 text-gray-500 sr-only">Home</span>
         </Link>
-        <Link to="/social" className="flex flex-col items-center">
+        <Link to="/social" className="flex flex-col items-center hover:opacity-60 transition-opacity">
           <Users
             className={`h-6 w-6 ${
               currentPath === "/social" ? "text-green-600" : "text-gray-500"
@@ -30,7 +30,7 @@ function Footer({ onScan }: { onScan: (data: IReceiptData) => void }) {
         </Link>
         {/* place holder */}
         <span className="w-16" />
-        <Link to="/history" className="flex flex-col items-center">
+        <Link to="/history" className="flex flex-col items-center hover:opacity-60 transition-opacity">
           <Wallet
             className={`h-6 w-6 ${
               currentPath === "/history" ? "text-green-600" : "text-gray-500"
@@ -38,7 +38,7 @@ function Footer({ onScan }: { onScan: (data: IReceiptData) => void }) {
           />
           <span className="text-xs mt-1 text-gray-500 sr-only">History</span>
         </Link>
-        <Link to="/profile" className="flex flex-col items-center">
+        <Link to="/profile" className="flex flex-col items-center hover:opacity-60 transition-opacity">
           <CircleUserRound
             className={`h-6 w-6 ${
               currentPath === "/profile" ? "text-green-600" : "text-gray-500"

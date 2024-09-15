@@ -11,6 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -26,6 +27,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.5.4",
     "isbot": "^4.1.0",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.441.0",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
@@ -35,10 +37,12 @@
     "remix-utils": "^7.6.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.12.0",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",

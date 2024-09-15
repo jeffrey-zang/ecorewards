@@ -21,6 +21,11 @@ module.exports = {
       //   onDelete: 'CASCADE',
       //   field: 'member_id'
       // },
+      balance: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'balance'
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -35,7 +40,7 @@ module.exports = {
         field: 'password'
       },
       animal: {
-        type: Sequelize.ENUM('Turtle', 'Squirrel', 'Bird', 'Wolf', 'Eagle'), // Enum for animals
+        type: Sequelize.ENUM('Turtle', 'Squirrel', 'Bird', 'Wolf', 'Eagle'),
         allowNull: false,
         field: 'animal'
       },

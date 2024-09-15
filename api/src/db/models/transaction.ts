@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { sequelize } from '@/db/index.ts'
 import { zodDateSchema, zodIdSchema } from '@/utils/index.ts'
 import { TRANSACTION_STATUS, TRANSACTION_TYPE, nameRegex, textRegex } from '@/constants/index.ts'
-import { Member, Partner } from '@/db/models/index.ts'
+import { Member, Partner, Rewards } from '@/db/models/index.ts'
 
 extendZodWithOpenApi(z)
 
@@ -14,6 +14,7 @@ interface TransactionAttributes {
   description: string
   points: number
   partnerId: number
+  rewardId: number
   transactedAt: Date
   createdAt: Date
   updatedAt: Date
@@ -38,6 +39,7 @@ class Transaction extends Model<TransactionAttributes, TransactionCreationAttrib
   declare description: string;
   declare points: number;
   declare partnerId: number;
+  declare rewardId: number;
   declare transactedAt: Date;
   declare createdAt: Date;
   declare updatedAt: Date;
@@ -58,7 +60,7 @@ class Transaction extends Model<TransactionAttributes, TransactionCreationAttrib
   //   });
   // }
 
-  static associate(models: { Partner: typeof Partner; Member: typeof Member }) {
+  static associate(models: { Partner: typeof Partner; Member: typeof Member; Rewards: typeof Rewards }) {
     Transaction.belongsTo(models.Partner, {
       foreignKey: 'partnerId',
       onDelete: 'CASCADE'
@@ -67,10 +69,12 @@ class Transaction extends Model<TransactionAttributes, TransactionCreationAttrib
       foreignKey: 'memberId',
       onDelete: 'CASCADE'
     })
+    Transaction.belongsTo(models.Rewards, {
+      foreignKey: 'rewardId',
+      onDelete: 'CASCADE'
+    })
   }
 }
-
-
 
 Transaction.init(
   {
@@ -115,6 +119,14 @@ Transaction.init(
         isInt: true
       },
       field: 'partner_id'
+    },
+    rewardId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        isInt: true
+      },
+      field: 'reward_id'
     },
     transactedAt: {
       type: DataTypes.DATE,
@@ -220,21 +232,24 @@ Transaction.init(
 
 Partner.associate({ Member, Transaction })
 Member.associate({ Partner, Transaction })
-Transaction.associate({ Partner, Member })
+// Rewards.associate({ Transaction });
+// Transaction.associate({ Partner, Member, Rewards })
+// Rewards.associate({ Transaction })
 
 const TransactionZod = z.object({
-  id: z.number().int().positive(),
+  id: z.number().int().positive().openapi({ example: 1 }),
   category: z.string().min(2).max(50).openapi({ example: 'Purchase' }),
   description: z.string().min(2).max(500).openapi({ example: 'Description of the transaction' }),
   points: z.number().int().nonnegative().openapi({ example: 100 }),
   partnerId: z.number().int().positive().openapi({ example: 1 }),
-  transactedAt: zodDateSchema,
-  createdAt: zodDateSchema,
-  updatedAt: zodDateSchema,
-  memberId: zodIdSchema,
+  rewardId: z.number().int().positive().openapi({ example: 1 }),
+  transactedAt: zodDateSchema.openapi({ example: '2024-09-14T12:00:00Z' }),
+  createdAt: zodDateSchema.openapi({ example: '2024-09-14T12:00:00Z' }),
+  updatedAt: zodDateSchema.openapi({ example: '2024-09-14T12:00:00Z' }),
+  memberId: zodIdSchema.openapi({ example: 1 }),
   partnerRefId: z.string().regex(textRegex).optional().openapi({ example: 'INV-20234' }),
   reference: z.string().uuid().openapi({ example: '123e4567-e89b-12d3-a456-426614174001' }),
-  amount: z.number().int().openapi({ example: 100 }),
+  amount: z.number().int().nonnegative().openapi({ example: 100 }),
   note: z.string().regex(textRegex).optional().openapi({ example: 'This is a note about the transaction.' }),
   status: z
     .enum([TRANSACTION_STATUS.PENDING, ...Object.values(TRANSACTION_STATUS).slice(1)])
@@ -245,8 +260,7 @@ const TransactionZod = z.object({
     .enum([TRANSACTION_TYPE.PAYMENT, ...Object.values(TRANSACTION_TYPE).slice(1)])
     .default(TRANSACTION_TYPE.PAYMENT)
     .optional()
-    .openapi({ example: TRANSACTION_TYPE.PAYMENT }),
-
+    .openapi({ example: TRANSACTION_TYPE.PAYMENT })
 });
 
 export { Transaction, TransactionZod, type TransactionAttributes, type TransactionCreationAttributes };

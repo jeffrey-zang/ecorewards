@@ -29,6 +29,16 @@ const partnerAuthHandler = (req: Request, jwtSecret: jwt.Secret) => {
   return req
 }
 
+const memberAuthHandler = (req: Request, jwtSecret: jwt.Secret) => {
+  req.memberId = baseAuthHandler(req, jwtSecret) as number
+
+  if (!req.memberId) {
+    throw new ForbiddenError('Invalid member id provided in the payload!')
+  }
+
+  return req
+}
+
 const adminAuthHandler = (req: Request, jwtSecret: jwt.Secret) => {
   req.adminId = baseAuthHandler(req, jwtSecret) as string
 
@@ -39,4 +49,4 @@ const adminAuthHandler = (req: Request, jwtSecret: jwt.Secret) => {
   return req
 }
 
-export { adminAuthHandler, partnerAuthHandler }
+export { adminAuthHandler, partnerAuthHandler, memberAuthHandler }

@@ -6,6 +6,7 @@ import { MEMBER_STATUS, addressRegex, nameRegex, phoneRegex } from '@/constants/
 import { sequelize } from '@/db/index.ts'
 import { Partner, Transaction } from '@/db/models/index.ts'
 import { zodDateSchema, zodIdSchema } from '@/utils/index.ts'
+import { AnimalType } from '@/db/models/user.ts'
 
 extendZodWithOpenApi(z)
 
@@ -16,13 +17,15 @@ interface MemberAttributes {
   address: string
   phone: string
   email: string
+  password: string
   balance: number
+  animal: string
   status: keyof typeof MEMBER_STATUS
   createdAt: Date
   updatedAt: Date
 }
 
-type MemberCreationAttributes = Optional<MemberAttributes, 'id' | 'partnerId' | 'createdAt' | 'updatedAt' | 'status'>
+type MemberCreationAttributes = Optional<MemberAttributes, 'id' | 'partnerId' | 'createdAt' | 'updatedAt' | 'email' | 'name' | 'address' | 'phone' | 'status'>
 
 class Member extends Model<MemberAttributes, MemberCreationAttributes> {
   declare id: number
@@ -31,7 +34,9 @@ class Member extends Model<MemberAttributes, MemberCreationAttributes> {
   declare address: string
   declare phone: string
   declare email: string
+  declare password: string
   declare balance: number
+  declare animal: string
   declare status: keyof typeof MEMBER_STATUS
   declare createdAt: Date
   declare updatedAt: Date
@@ -75,7 +80,7 @@ Member.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         is: nameRegex,
         len: [2, 50]
@@ -84,7 +89,7 @@ Member.init(
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         is: addressRegex,
         len: [2, 255]
@@ -93,7 +98,7 @@ Member.init(
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         is: phoneRegex,
         len: [2, 25]
@@ -108,6 +113,11 @@ Member.init(
       },
       field: 'email'
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: 'password'
+    },
     balance: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -117,9 +127,17 @@ Member.init(
       },
       field: 'balance'
     },
+    animal: {
+      type: DataTypes.ENUM(...Object.keys(AnimalType)),
+      allowNull: false,
+      validate: {
+        isIn: [Object.keys(AnimalType)]
+      },
+      field: 'animal'
+    },
     status: {
       type: DataTypes.ENUM(...Object.values(MEMBER_STATUS)),
-      allowNull: false,
+      allowNull: true,
       defaultValue: MEMBER_STATUS.PENDING,
       values: Object.values(MEMBER_STATUS),
       validate: {
@@ -157,18 +175,33 @@ Member.init(
 const MemberZod = z.object({
   id: zodIdSchema,
   partnerId: zodIdSchema,
-  name: z.string().regex(nameRegex).openapi({ example: 'John Doe' }),
-  address: z.string().regex(addressRegex).openapi({ example: '123 Main St, Toronto, ON' }),
-  phone: z.string().regex(phoneRegex).openapi({ example: '4161234567' }),
-  email: z.string().email().openapi({ example: 'member@example.com' }),
-  balance: z.number().int().openapi({ example: 1000 }),
-  status: z
-    .enum([MEMBER_STATUS.PENDING, ...Object.values(MEMBER_STATUS).slice(1)])
+  name: z.string()
+    .regex(nameRegex)
+    .optional()
+    .openapi({ example: 'John Doe' }),
+  address: z.string()
+    .regex(addressRegex)
+    .optional()
+    .openapi({ example: '123 Main St, Toronto, ON' }),
+  phone: z.string()
+    .regex(phoneRegex)
+    .optional()
+    .openapi({ example: '4161234567' }),
+  email: z.string()
+    .email()
+    .openapi({ example: 'member@example.com' }),
+  balance: z.number()
+    .int()
+    .openapi({ example: 1000 }),
+  status: z.enum([
+    MEMBER_STATUS.PENDING,
+    ...Object.values(MEMBER_STATUS).slice(1)
+  ])
     .default(MEMBER_STATUS.PENDING)
     .optional()
     .openapi({ example: MEMBER_STATUS.PENDING }),
   createdAt: zodDateSchema,
   updatedAt: zodDateSchema
-})
+});
 
 export { Member, MemberZod, type MemberAttributes, type MemberCreationAttributes }

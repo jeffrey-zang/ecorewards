@@ -3,6 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize'
 import { z } from 'zod'
 import { sequelize } from '@/db/index.ts'
 import { zodDateSchema } from '@/utils/index.ts'
+import { Transaction } from '@/db/models/index.ts'
 
 extendZodWithOpenApi(z)
 
@@ -14,6 +15,7 @@ interface RewardsAttributes {
   description: string;
   company: string;
   category: string;
+  partnerId: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,8 +30,16 @@ class Rewards extends Model<RewardsAttributes, RewardsCreationAttributes> {
   declare description: string;
   declare company: string;
   declare category: string;
+  declare partnerId: number;
   declare createdAt: Date;
   declare updatedAt: Date;
+
+  static associate(models: { Transaction: typeof Transaction }) {
+    Rewards.hasMany(models.Transaction, {
+      foreignKey: 'partnerId',
+      onDelete: 'CASCADE'
+    })
+  }
 }
 
 Rewards.init(
@@ -84,6 +94,11 @@ Rewards.init(
       allowNull: false,
       field: 'category'
     },
+    partnerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'partner_id'
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -119,6 +134,7 @@ const RewardsZod = z.object({
   description: z.string().max(500).optional().openapi({ example: 'Detailed description of the reward' }),
   company: z.string().openapi({ example: "Patagonia" }),
   category: z.string().openapi({ example: "Gift Card" }),
+  partnerId: z.number().openapi({ example: 1 }),
   createdAt: zodDateSchema,
   updatedAt: zodDateSchema
 });

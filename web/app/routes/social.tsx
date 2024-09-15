@@ -1,73 +1,78 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Button } from "~/components/ui/button"
 import { ScrollArea } from "~/components/ui/scroll-area"
-import { motion } from "framer-motion"
+import { Trophy, ChevronUp, ChevronDown } from 'lucide-react'
 
-interface Racer {
-  id: number
-  emoji: string
-  name: string
-  position: number
+// Mock data for the leaderboard
+const leaderboardData = [
+  { id: 1, name: "Alice", animal: "eagle", points: 1200 },
+  { id: 2, name: "Bob", animal: "wolf", points: 1150 },
+  { id: 3, name: "Charlie", animal: "squirrel", points: 1100 },
+  { id: 4, name: "David", animal: "bird", points: 1050 },
+  { id: 5, name: "Eve", animal: "turtle", points: 1000 },
+  { id: 6, name: "Frank", animal: "eagle", points: 950 },
+  { id: 7, name: "Grace", animal: "wolf", points: 900 },
+  { id: 8, name: "Henry", animal: "squirrel", points: 850 },
+  { id: 9, name: "Ivy", animal: "bird", points: 800 },
+  { id: 10, name: "Jack", animal: "turtle", points: 750 },
+]
+
+const animalEmojis: { [key: string]: string } = {
+  turtle: "🐢",
+  squirrel: "🐿️",
+  bird: "🐦",
+  wolf: "🐺",
+  eagle: "🦅",
 }
 
-export default function RunningTrack() {
-  const [racers, setRacers] = useState<Racer[]>([
-    { id: 1, emoji: '🐆', name: 'Cheetah', position: 95 },
-    { id: 2, emoji: '🐇', name: 'Rabbit', position: 80 },
-    { id: 3, emoji: '🐎', name: 'Horse', position: 65 },
-    { id: 4, emoji: '🐕', name: 'Dog', position: 50 },
-    { id: 5, emoji: '🐢', name: 'Turtle', position: 35 },
-    { id: 6, emoji: '🐌', name: 'Snail', position: 20 },
-  ])
+export default function Component() {
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const sortedData = [...leaderboardData].sort((a, b) => 
+    sortOrder === 'desc' ? b.points - a.points : a.points - b.points
+  )
+  const maxPoints = Math.max(...sortedData.map(user => user.points))
 
   return (
-    <div className="w-full max-w-md mx-auto h-[80vh] bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Animal Race</h1>
-      <ScrollArea className="h-full">
-        <div className="relative w-full h-[150vh] overflow-hidden">
-          <svg className="w-full h-full" viewBox="0 0 100 150" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="trackGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#FF6B6B" />
-                <stop offset="100%" stopColor="#FF8E8E" />
-              </linearGradient>
-            </defs>
-            <rect x="10" y="0" width="80" height="150" fill="url(#trackGradient)" rx="5" ry="5" />
-            {/* <path d="M 10 0 L 90 0" stroke="white" strokeWidth="2" strokeDasharray="5,5" />
-            <path d="M 10 150 L 90 150" stroke="white" strokeWidth="2" strokeDasharray="5,5" /> */}
-            {[...Array(15)].map((_, i) => (
-              <path
-                key={i}
-                d={`M 10 ${i * 10} L 90 ${i * 10}`}
-                stroke="white"
-                strokeWidth="0.5"
-                strokeDasharray="2,2"
-              />
-            ))}
-          </svg>
-          {racers.map((racer) => (
-            <motion.div
-              key={racer.id}
-              className="absolute left-1/2 transform -translate-x-1/2 text-4xl cursor-pointer"
-              style={{ bottom: `${racer.position}%` }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ scale: 1.2 }}
-            >
-              <span>{racer.emoji}</span>
-              <motion.div
-                className="absolute left-full ml-2 bg-white p-2 rounded-md shadow-md text-sm whitespace-nowrap"
-                initial={{ opacity: 0, x: -10 }}
-                whileHover={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className="font-semibold">{racer.name}</span>
-                <span className="ml-2">{Math.round(racer.position)}pts</span>
-              </motion.div>
-            </motion.div>
-          ))}
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="p-6 bg-green-600 text-white">
+          <h1 className="text-2xl font-bold flex items-center justify-center">
+            <Trophy className="mr-2" /> Eco Leaderboard
+          </h1>
         </div>
-      </ScrollArea>
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-green-800">Weekly Rankings</h2>
+            <Button
+              variant="outline"
+              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+              className="text-green-600 border-green-600 hover:bg-green-50"
+            >
+              {sortOrder === 'desc' ? <ChevronDown className="mr-2" /> : <ChevronUp className="mr-2" />}
+              {sortOrder === 'desc' ? 'Highest First' : 'Lowest First'}
+            </Button>
+          </div>
+          <ScrollArea className="h-[60vh]">
+            {sortedData.map((user, index) => (
+              <div key={user.id} className="mb-4 last:mb-0">
+                <div className="flex items-center mb-1">
+                  <span className="text-md font-semibold text-green-800 w-8">{index + 1}.</span>
+                  <span className="text-md font-medium flex-grow">{user.name}</span>
+                  <span className="text-md font-semibold text-green-600">{user.points} pts</span>
+                </div>
+                <div className="relative h-12 bg-green-100 rounded-full overflow-hidden">
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-green-300 rounded-full flex items-center justify-end pr-2 transition-all duration-500 ease-out"
+                    style={{ width: `${(user.points / maxPoints) * 100}%` }}
+                  >
+                    <span className="text-2xl">{animalEmojis[user.animal]}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </ScrollArea>
+        </div>
+      </div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { logger } from '@/logger/index.ts'
 import { partnerAuthHandler } from '@/middleware/index.ts'
 import { handleError } from '@/utils/index.ts'
+import { memberAuthHandler } from '@/middleware/auth-handler.ts'
 
 const partnerAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,4 +20,18 @@ const partnerAuthMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 }
 
-export { partnerAuthMiddleware }
+const memberAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    memberAuthHandler(req, process.env.JWT_SECRET as jwt.Secret)
+
+    logger.info('[partnerAuthMiddleware]: successfully authorized partner request')
+
+    next()
+  } catch (error) {
+    logger.error('[partnerAuthMiddleware]: partner request failed authorization')
+
+    handleError(error as Error, res)
+  }
+}
+
+export { partnerAuthMiddleware, memberAuthMiddleware }

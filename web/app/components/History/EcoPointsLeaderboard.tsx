@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
 import { Badge } from "~/components/ui/badge"
 import { Leaf, ShoppingCart, Recycle, Car, Zap } from "lucide-react"
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 // Mock data
 const leaderboardData = [
@@ -29,8 +30,11 @@ const getIconForType = (type: string) => {
 }
 
 export default function EcoPointsLeaderboard() {
+
+  const [animationParent] = useAutoAnimate()
+
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-2xl mx-auto" ref={animationParent}>
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">Eco Points Summary</CardTitle>
       </CardHeader>

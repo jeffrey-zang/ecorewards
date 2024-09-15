@@ -13,16 +13,12 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
-        validate: {
-          isInt: true
-        },
         field: 'id'
       },
       category: {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          is: /^[\w\s]+$/gi,
           len: [2, 50]
         },
         field: 'category'
@@ -31,7 +27,6 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
         validate: {
-          is: /^[\w\s.,!?'"()-]+$/gi,
           len: [2, 500]
         },
         field: 'description'
@@ -39,7 +34,6 @@ module.exports = {
       points: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 0,
         validate: {
           isInt: true
         },
@@ -58,6 +52,14 @@ module.exports = {
         },
         field: 'partner_id'
       },
+      rewardId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: true
+        },
+        field: 'reward_id'
+      },
       transactedAt: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -66,32 +68,6 @@ module.exports = {
           isDate: true
         },
         field: 'transacted_at'
-      },
-      type: {
-        type: Sequelize.ENUM('PAYMENT', 'REFUND', 'INTERNAL'),
-        allowNull: false,
-        defaultValue: 'PAYMENT',
-        values: ['PAYMENT', 'REFUND', 'INTERNAL'],
-        validate: {
-          is: /^[\w\s]+$/gi
-        },
-        field: 'type'
-      },
-      amount: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        validate: {
-          isInt: true
-        },
-        field: 'amount'
-      },
-      note: {
-        type: Sequelize.TEXT,
-        validate: {
-          is: /^[\w\s.,!?'"()-]+$/gi,
-          len: [2, 500]
-        },
-        field: 'note'
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -136,7 +112,6 @@ module.exports = {
       partnerRefId: {
         type: Sequelize.TEXT,
         validate: {
-          is: /^[\w\s.,!?'"()-]+$/gi,
           len: [2, 500]
         },
         field: 'partner_ref_id'
@@ -145,12 +120,35 @@ module.exports = {
         type: Sequelize.ENUM('PENDING', 'COMPLETED', 'VOIDED'),
         allowNull: false,
         defaultValue: 'PENDING',
-        values: ['PENDING', 'COMPLETED', 'VOIDED'],
         validate: {
-          is: /^[\w\s]+$/gi
+          isIn: [['PENDING', 'COMPLETED', 'VOIDED']]
         },
         field: 'status'
       },
+      type: {
+        type: Sequelize.ENUM('PAYMENT', 'REFUND', 'INTERNAL'),
+        allowNull: false,
+        defaultValue: 'PAYMENT',
+        validate: {
+          isIn: [['PAYMENT', 'REFUND', 'INTERNAL']]
+        },
+        field: 'type'
+      },
+      amount: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: true
+        },
+        field: 'amount'
+      },
+      note: {
+        type: Sequelize.TEXT,
+        validate: {
+          len: [2, 500]
+        },
+        field: 'note'
+      }
     })
   },
   /**

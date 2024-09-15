@@ -21,6 +21,7 @@ interface UserAttributes {
   id: number
   // memberId: number
   email: string
+  balance: number
   password: string
   animal: string
   createdAt: Date
@@ -33,6 +34,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
     declare id: number
     // declare memberId: number
     declare email: string
+    declare balance: number
     declare password: string
     declare animal: string
     declare createdAt: Date
@@ -91,6 +93,11 @@ User.init(
           isIn: [Object.keys(AnimalType)]
         },
         field: 'animal'
+      },
+      balance: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'balance'
       },
       createdAt: {
         type: DataTypes.DATE,

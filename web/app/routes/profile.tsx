@@ -10,6 +10,8 @@ import avatar from "../assets/avatar.svg";
 // import EcoActionsHistory from "~/components/History/EcoActionsHistory";
 import { useNavigate } from "@remix-run/react";
 import { toast } from "sonner";
+import { jwtDecode } from  "jwt-decode";
+import { useBalanceStore } from "~/lib/store";
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,14 +22,20 @@ export const meta: MetaFunction = () => {
 
 export default function Profile(props: any) {
   const [profileData, setProfileData] = useState<any>({});
+  const balance = useBalanceStore((state) => state.balance);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!localStorage.getItem("accessToken")) {
+      const tk = localStorage.getItem("accessToken");
+      if (!tk) {
         navigate("/login");
+        return;
       }
+      const decoded = jwtDecode(tk);
+      setProfileData(decoded);
+      console.log(decoded);
     };
 
     fetchData();
@@ -41,23 +49,23 @@ export default function Profile(props: any) {
           <AvatarFallback>AV</AvatarFallback>
         </Avatar>
         <div className="pl-4">
-          <CardTitle className="text-2xl">{profileData?.name}</CardTitle>
+          <CardTitle className="text-2xl">{(profileData?.name) ? <>{profileData?.name}</> : 'Your Name'}</CardTitle>
           <p className="text-sm text-muted-foreground">
-            {profileData?.points < 1000
+            {balance < 1000
               ? "Eco Beginner"
-              : profileData?.points > 1000 && profileData?.points < 5000
+              : balance > 1000 && balance < 5000
               ? "Eco Warrior"
               : "Eco Master"}
           </p>
         </div>
       </CardHeader>
       <CardContent>
-        <Streak streakDays={5} />
-        <PointsDisplay points={profileData?.points} />
-        <MilestonesList points={profileData?.points} />
+        <Streak streakDays={2} />
+        <PointsDisplay points={balance} />
+        <MilestonesList points={balance} />
       </CardContent>
       <div className="flex w-full">
-        <button className="m-8 mt-0 bg-red-100 p-2 rounded-md w-full" onClick={() => {
+        <button className="m-8 mt-0 bg-red-100 p-2 rounded-md w-full hover:bg-red-200 transition-colors" onClick={() => {
           localStorage.removeItem('accessToken');
           navigate('/login');
           toast.success('Logged out successfully!');

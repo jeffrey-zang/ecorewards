@@ -15,6 +15,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuIte
 import { toast } from "sonner";
 import { ArrowDown } from "lucide-react";
 import { useNavigate } from "@remix-run/react";
+import { jwtDecode } from "jwt-decode";
+import { useBalanceStore } from "~/lib/store";
 
 export default function AuthForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -23,6 +25,8 @@ export default function AuthForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [animal, setAnimal] = useState<number>(1);
+
+  const setBal = useBalanceStore(state => state.setBal);
   
   const navigate = useNavigate();
 
@@ -53,8 +57,13 @@ export default function AuthForm() {
     });
 
     if (response.ok) {
+      const token = (await response.json()).token;
+      localStorage.setItem('accessToken', token);
+      const decoded = jwtDecode(token);
+      console.log("decoded", decoded);
+      // @ts-ignore
+      setBal(decoded.balance);
       toast.success('Logged in successfully!');
-      localStorage.setItem('accessToken', (await response.json()).token);
       navigate('/');
     } else {
       toast.error("An error occurred.");
@@ -80,7 +89,12 @@ export default function AuthForm() {
     });
 
     if (response.ok) {
-      localStorage.setItem('accessToken', (await response.json()).token);
+      const token = (await response.json()).token;
+      localStorage.setItem('accessToken', token);
+      const decoded = jwtDecode(token);
+      console.log("decoded", decoded);
+      // @ts-ignore
+      setBal(decoded.balance);
       toast.success('Account created successfully!');
       navigate('/');
     } else {

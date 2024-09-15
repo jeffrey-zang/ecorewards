@@ -12,11 +12,16 @@ const router = express.Router()
 
 router.post('/user-signup', async (req: Request, res: Response) => {
   try {
-    const { email, password, animal } = zodCredentials.extend({
-      animal: z.string()
+    // console.log(zodCredentials.extend({
+    //   animal: z.string(),
+    //   name: z.string()
+    // }).safeParse(req.body));
+    const { name, email, password, animal } = zodCredentials.extend({
+      animal: z.string(),
+      name: z.string()
     }).parse(req.body)
 
-    const result = await userSignupController(email, password, animal)
+    const result = await userSignupController(name, email, password, animal)
 
     logger.info(`[/user-signup]: successfully created user with email ${email}`)
 

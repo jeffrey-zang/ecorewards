@@ -4,5 +4,6 @@ declare module 'express' {
   export interface Request extends ExpressRequest {
     adminId?: string
     partnerId?: number
+    memberId?: number
   }
 }

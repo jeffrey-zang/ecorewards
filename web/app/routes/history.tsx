@@ -22,33 +22,17 @@ const Navigate = () => {
 }
 
 export default function History(props: any) {
-  const [history, setHistory] = useState<any>({});
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      setAccessToken(localStorage.getItem("accessToken"));
-      // try {
-      //   const response = await fetch(
-      //     `http://_/api/v1/members/${props?.memberId}`
-      //   );
-      //   const json = await response.json();
-      //   setProfileData(json || {});
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
-
-      console.log(localStorage.getItem("accessToken"));
+      if (!localStorage.getItem("accessToken")) {
+        navigate("/login");
+      }
     };
 
     fetchData();
   }, []);
-
-  if (!accessToken) {
-    return (
-      <Navigate />
-    )
-  }
 
   return (
     <div>

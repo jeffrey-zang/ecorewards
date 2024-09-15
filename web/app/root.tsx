@@ -8,7 +8,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -19,6 +19,8 @@ import IReceiptData from "~/types/IReceiptData";
 import { Toaster } from 'sonner'
 
 import "./tailwind.css";
+import { useBalanceStore } from "~/lib/store";
+import { jwtDecode } from "jwt-decode";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,6 +46,26 @@ export async function loader() {
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useLoaderData<typeof loader>();
   const [receiptData, setReceiptData] = useState<IReceiptData|null>(null);
+  const setBal = useBalanceStore(state => state.setBal);
+
+  useEffect(() => {
+    const tk = localStorage.getItem("accessToken");
+    if (tk) {
+      const decoded = jwtDecode(tk);
+      
+      // @ts-ignore
+      fetch(window.ENV.API_URL + `/api/v1/loyalty/${decoded.id}/points`, {
+        method: "GET",
+        headers: {
+          'Authorization': "Bearer " + tk
+        }
+      }).then((res) => res.json()).then((res) => {
+        console.log(res);
+        setBal(res.balance);
+      });
+    }
+  }, [receiptData]);
+  
   return (
     <html lang="en">
       <head>
@@ -53,17 +75,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="flex h-screen items-center justify-center relative">
-        <Toaster position="top-right" richColors={true} />
+        <Toaster position="top-right" richColors={true} className="z-[9999]" />
         <div className="flex flex-col md:hidden w-full h-full">
-          <Header points={0} />
+          <Header />
           {receiptData ? <Result className="min-h-full flex-1 overflow-auto" receiptData={receiptData} onClose={() => setReceiptData(null)} /> : 
           <div className="flex-1 overflow-auto py-4 px-8">
             {children}
           </div>
             }
-          <Footer onScan={(data) => setReceiptData(data)} />
+          <Footer onScan={(receiptData) => setReceiptData(receiptData)} />
         </div>
-        <div className="hidden md:flex text-center">This site is designed for mobile devices only. Please visit from a mobile device to view this content.</div>
+        <div className="hidden md:flex flex-col text-center">
+          <h1 className="text-xl font-bold bg-gradient-to-r from-green-500 to-green-700 text-transparent bg-clip-text">EcoRewards</h1>
+          This site is designed for mobile devices only. Please visit from a mobile device to view this content.
+        </div>
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{

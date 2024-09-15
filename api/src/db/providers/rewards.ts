@@ -6,7 +6,7 @@ const countRewards = (where: WhereOptions<Rewards>, companyName: string, sequeli
   return Rewards.count({ where: { ...where, company: companyName }, transaction: sequelizeTransaction })
 }
 
-const findRewards = (where: WhereOptions<Rewards>, companyName: string, sequelizeTransaction?: SequelizeTransaction) => {
+const findRewards = (where?: WhereOptions<Rewards>, companyName?: string, sequelizeTransaction?: SequelizeTransaction) => {
   return Rewards.findAll({ where: { ...where, company: companyName }, transaction: sequelizeTransaction, raw: true })
 }
 

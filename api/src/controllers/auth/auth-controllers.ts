@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-import { Partner } from '@/db/models/index.ts'
+import { Member, Partner } from '@/db/models/index.ts'
 import { User } from '@/db/models/index.ts';
-import { findPartnerByEmail } from '@/db/providers/index.ts'
+import { addMember, findPartnerByEmail } from '@/db/providers/index.ts'
 import { ForbiddenError, NotFoundError } from '@/utils/index.ts'
-import { AnimalType } from '@/db/models/user.ts';
+// import { AnimalType } from '@/db/models/user.ts';
 
 const adminAuthController = async (email: string, password: string) => {
   if (email !== (process.env.ADMIN_EMAIL as string)) {
@@ -48,23 +48,33 @@ const partnerAuthController = async (email: string, password: string) => {
 }
 
 
-const userSignupController = async (email: string, password: string, animal: AnimalType) => {
-  const existingUser = await User.findOne({ where: { email } });
+const userSignupController = async (name: string, email: string, password: string, animal: string) => {
+  const existingUser = await Member.findOne({ where: { email } });
+  console.log("EXISTING", existingUser);
   if (existingUser) {
     throw new ForbiddenError(`User with email ${email} already exists!`);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  console.log("animal", animal);
+  // const user = await Member.create({ email, password: hashedPassword, animal, balance: 0 });
 
-  const user = await User.create({ email, password: hashedPassword, animal });
+  // add user to our "partner" id 1
+  const user = await addMember(1, { name, email, password: hashedPassword, animal, balance: 0 });
 
-  return { message: 'User created successfully', user };
+  // return { message: 'User created successfully', user };
+
+  const token = jwt.sign(
+    { id: user.id, name: user.name, email: user.email, balance: user.balance, animal: user.animal, createdAt: user.createdAt, updatedAt: user.updatedAt },
+    process.env.JWT_SECRET as jwt.Secret,
+    { expiresIn: '30m' }
+  );
+
+  return { token };
 };
 
 const userLoginController = async (email: string, password: string) => {
-  const user = await User.findOne({ where: { email } });
+  const user = await Member.findOne({ where: { email } });
   if (!user) {
     throw new NotFoundError(`User with email ${email} does not exist!`);
   }
@@ -75,7 +85,7 @@ const userLoginController = async (email: string, password: string) => {
   }
 
   const token = jwt.sign(
-    { id: user.id, email: user.email },
+    { id: user.id, name: user.name, email: user.email, balance: user.balance, animal: user.animal, createdAt: user.createdAt, updatedAt: user.updatedAt },
     process.env.JWT_SECRET as jwt.Secret,
     { expiresIn: '30m' }
   );

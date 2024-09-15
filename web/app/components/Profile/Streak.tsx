@@ -13,7 +13,7 @@ export default function Streak({streakDays} : {streakDays:number}) {
             <Leaf className="text-white w-16 h-16" />
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-green-800 text-3xl font-bold">{streakDays}</span>
+            <span className="text-black text-5xl font-black">{streakDays}</span>
           </div>
         </div>
         <div className="flex justify-center space-x-2 mb-4">

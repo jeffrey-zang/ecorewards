@@ -33,7 +33,7 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           is: /^[\w\s]+$/gi,
           len: [2, 50]
@@ -42,7 +42,7 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           is: /^[\w\s.,-]+$/gi,
           len: [2, 255]
@@ -51,7 +51,7 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           is: /^[\w\s.()-]+$/gi,
           len: [2, 25]
@@ -66,6 +66,11 @@ module.exports = {
         },
         field: 'email'
       },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'password'
+      },
       balance: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -75,9 +80,14 @@ module.exports = {
         },
         field: 'balance'
       },
+      animal: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        field: 'animal'
+      },
       status: {
         type: Sequelize.ENUM('PENDING', 'ACTIVE', 'DEACTIVATED'),
-        allowNull: false,
+        allowNull: true,
         defaultValue: 'PENDING',
         values: ['PENDING', 'ACTIVE', 'DEACTIVATED'],
         validate: {
