@@ -7,7 +7,7 @@ import { ForbiddenError, NotFoundError } from '@/utils/index.ts'
 
 const adminAuthController = async (email: string, password: string) => {
   if (email !== (process.env.ADMIN_EMAIL as string)) {
-    throw new NotFoundError(`Admasdflkajdsfklsalkasdklfin with email of ${email} does not exist! ${process.env.ADMIN_EMAIL}`)
+    throw new NotFoundError(`Admin with email of ${email} does not exist! ${process.env.ADMIN_EMAIL}`)
   }
 
   const isPasswordCorrect = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH as string)

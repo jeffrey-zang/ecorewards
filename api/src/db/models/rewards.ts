@@ -1,18 +1,8 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi'
 import { DataTypes, Model, Optional } from 'sequelize'
 import { z } from 'zod'
-
-// import {
-//   PARTNER_PERMISSIONS,
-//   PARTNER_STATUS,
-//   addressRegex,
-//   nameRegex,
-//   phoneRegex,
-//   textRegex
-// } from '@/constants/index.ts'
 import { sequelize } from '@/db/index.ts'
-// import { Member, Transaction } from '@/db/models/index.ts'
-import { zodDateSchema, zodIdSchema } from '@/utils/index.ts'
+import { zodDateSchema } from '@/utils/index.ts'
 
 extendZodWithOpenApi(z)
 
@@ -22,39 +12,27 @@ interface RewardsAttributes {
   points: number;
   image: string;
   description: string;
-  category: string; // enum
+  company: string;
+  category: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-type PartnerCreationAttributes = Optional<RewardsAttributes, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'permission'>
+type RewardsCreationAttributes = Optional<RewardsAttributes, 'id' | 'image' | 'description' | 'createdAt' | 'updatedAt'>
 
-class Partner extends Model<PartnerAttributes, PartnerCreationAttributes> {
-  declare id: number
-  declare status: keyof typeof PARTNER_STATUS
-  declare name: string
-  declare description: string
-  declare address: string
-  declare phone: string
-  declare email: string
-  declare permission: keyof typeof PARTNER_PERMISSIONS
-  declare password: string
-  declare createdAt: Date
-  declare updatedAt: Date
-
-  static associate(models: { Member: typeof Member; Transaction: typeof Transaction }) {
-    Partner.hasMany(models.Member, {
-      foreignKey: 'partnerId',
-      onDelete: 'CASCADE'
-    })
-    Partner.hasMany(models.Transaction, {
-      foreignKey: 'partnerId',
-      onDelete: 'CASCADE'
-    })
-  }
+class Rewards extends Model<RewardsAttributes, RewardsCreationAttributes> {
+  declare id: number;
+  declare name: string;
+  declare points: number;
+  declare image: string;
+  declare description: string;
+  declare company: string;
+  declare category: string;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
-Partner.init(
+Rewards.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -66,78 +44,45 @@ Partner.init(
       },
       field: 'id'
     },
-    status: {
-      type: DataTypes.ENUM(...Object.values(PARTNER_STATUS)),
-      allowNull: false,
-      defaultValue: PARTNER_STATUS.ACTIVE,
-      values: Object.values(PARTNER_STATUS),
-      validate: {
-        is: nameRegex
-      },
-      field: 'status'
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: nameRegex,
         len: [2, 50]
       },
       field: 'name'
     },
-    description: {
-      type: DataTypes.TEXT,
+    points: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        is: textRegex,
-        len: [2, 500]
+        isInt: true
+      },
+      field: 'points'
+    },
+    image: {
+      type: DataTypes.STRING,
+      validate: {
+        len: [0, 255]
+      },
+      field: 'image'
+    },
+    description: {
+      type: DataTypes.TEXT,
+      validate: {
+        len: [0, 500]
       },
       field: 'description'
     },
-    address: {
+    company: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        is: addressRegex,
-        len: [2, 255]
-      },
-      field: 'address'
+      field: 'company'
     },
-    phone: {
+    category: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        is: phoneRegex,
-        len: [2, 25]
-      },
-      field: 'phone'
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      },
-      field: 'email'
-    },
-    permission: {
-      type: DataTypes.ENUM(...Object.values(PARTNER_PERMISSIONS)),
-      allowNull: false,
-      defaultValue: PARTNER_PERMISSIONS.WRITE,
-      values: Object.values(PARTNER_PERMISSIONS),
-      validate: {
-        is: nameRegex
-      },
-      field: 'permission'
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        is: /\$2[ayb]\$.{56}/gi
-      },
-      field: 'password'
+      field: 'category'
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -159,33 +104,23 @@ Partner.init(
     }
   },
   {
-    modelName: 'partner',
-    tableName: 'partners',
+    modelName: 'rewards',
+    tableName: 'rewards',
     timestamps: true,
     sequelize
   }
-)
+);
 
-const PartnerZod = z.object({
-  id: zodIdSchema,
-  name: z.string().regex(nameRegex).openapi({ example: 'Partner Name' }),
-  description: z.string().regex(textRegex).openapi({ example: 'Partner Description' }),
-  address: z.string().regex(addressRegex).openapi({ example: '123 Main St, Toronto, ON' }),
-  phone: z.string().regex(phoneRegex).openapi({ example: '4161234567' }),
-  email: z.string().email().openapi({ example: 'example@email.com' }),
-  password: z.string().openapi({ example: '*********' }),
-  status: z
-    .enum([PARTNER_STATUS.ACTIVE, ...Object.values(PARTNER_STATUS).slice(1)])
-    .default(PARTNER_STATUS.ACTIVE)
-    .optional()
-    .openapi({ example: PARTNER_STATUS.ACTIVE }),
-  permission: z
-    .enum([PARTNER_PERMISSIONS.WRITE, ...Object.values(PARTNER_PERMISSIONS).slice(1)])
-    .default(PARTNER_PERMISSIONS.WRITE)
-    .optional()
-    .openapi({ example: PARTNER_PERMISSIONS.WRITE }),
+const RewardsZod = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(2).max(50).openapi({ example: 'Reward Name' }),
+  points: z.number().int().nonnegative().openapi({ example: 100 }),
+  image: z.string().optional().openapi({ example: 'http://example.com/image.jpg' }),
+  description: z.string().max(500).optional().openapi({ example: 'Detailed description of the reward' }),
+  company: z.string().openapi({ example: "Patagonia" }),
+  category: z.string().openapi({ example: "Gift Card" }),
   createdAt: zodDateSchema,
   updatedAt: zodDateSchema
-})
+});
 
-export { Partner, PartnerZod, type PartnerAttributes, type PartnerCreationAttributes }
+export { Rewards, RewardsZod, type RewardsAttributes, type RewardsCreationAttributes };

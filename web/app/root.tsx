@@ -16,6 +16,8 @@ import Result from "./components/Scan/Result";
 
 import IReceiptData from "~/types/IReceiptData";
 
+import { Toaster } from 'sonner'
+
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -51,6 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="flex h-screen items-center justify-center relative">
+        <Toaster />
         <div className="flex flex-col md:hidden w-full h-full">
           <Header points={0} />
           {receiptData ? <Result className="min-h-full flex-1 overflow-auto" receiptData={receiptData} onClose={() => setReceiptData(null)} /> : 

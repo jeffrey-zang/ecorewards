@@ -11,10 +11,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { toast  } from "sonner";
 
 export default function AuthForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -22,13 +22,30 @@ export default function AuthForm() {
 
   const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('bruh')
+    setIsLoading(true);
+
+    const response = await fetch(window.ENV.API_URL + "/api/v1/auth", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(response)
+    if (response.ok) {
+      toast.success('Logged in successfully!')
+    } else {
+      toast.error("An error occured.");
+    }
+    setIsLoading(false);
   };
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true);
-
-    console.log('bruh')
 
     const response = await fetch(window.ENV.API_URL + "/api/v1/loyalty/partners", {
       method: "POST",
@@ -47,8 +64,11 @@ export default function AuthForm() {
     });
 
     if (response.ok) {
-      
+      toast.success('Account created successfully! Please log in to continue.')
+    } else {
+      toast.error("An error occured. This email may already be in use.");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -146,11 +166,6 @@ export default function AuthForm() {
             </TabsContent>
           </Tabs>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            By continuing, you agree to our Terms of Service and Privacy Policy.
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );

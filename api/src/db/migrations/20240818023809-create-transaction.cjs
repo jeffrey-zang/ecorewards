@@ -18,23 +18,32 @@ module.exports = {
         },
         field: 'id'
       },
-      reference: {
-        type: Sequelize.UUID,
+      category: {
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: Sequelize.literal('gen_random_uuid()'),
         validate: {
-          isUUID: 4
+          is: /^[\w\s]+$/gi,
+          len: [2, 50]
         },
-        field: 'reference'
+        field: 'category'
       },
-      transactedAt: {
-        type: Sequelize.DATE,
+      description: {
+        type: Sequelize.TEXT,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         validate: {
-          isDate: true
+          is: /^[\w\s.,!?'"()-]+$/gi,
+          len: [2, 500]
         },
-        field: 'transacted_at'
+        field: 'description'
+      },
+      points: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+          isInt: true
+        },
+        field: 'points'
       },
       partnerId: {
         type: Sequelize.INTEGER,
@@ -49,36 +58,14 @@ module.exports = {
         },
         field: 'partner_id'
       },
-      memberId: {
-        type: Sequelize.INTEGER,
+      transactedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
-        references: {
-          model: 'members',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         validate: {
-          isInt: true
+          isDate: true
         },
-        field: 'member_id'
-      },
-      partnerRefId: {
-        type: Sequelize.TEXT,
-        validate: {
-          is: /^[\w\s.,!?'"()-]+$/gi,
-          len: [2, 500]
-        },
-        field: 'partner_ref_id'
-      },
-      status: {
-        type: Sequelize.ENUM('PENDING', 'COMPLETED', 'VOIDED'),
-        allowNull: false,
-        defaultValue: 'PENDING',
-        values: ['PENDING', 'COMPLETED', 'VOIDED'],
-        validate: {
-          is: /^[\w\s]+$/gi
-        },
-        field: 'status'
+        field: 'transacted_at'
       },
       type: {
         type: Sequelize.ENUM('PAYMENT', 'REFUND', 'INTERNAL'),
@@ -123,7 +110,47 @@ module.exports = {
           isDate: true
         },
         field: 'updated_at'
-      }
+      },
+      reference: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
+        validate: {
+          isUUID: 4
+        },
+        field: 'reference'
+      },
+      memberId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'members',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        validate: {
+          isInt: true
+        },
+        field: 'member_id'
+      },
+      partnerRefId: {
+        type: Sequelize.TEXT,
+        validate: {
+          is: /^[\w\s.,!?'"()-]+$/gi,
+          len: [2, 500]
+        },
+        field: 'partner_ref_id'
+      },
+      status: {
+        type: Sequelize.ENUM('PENDING', 'COMPLETED', 'VOIDED'),
+        allowNull: false,
+        defaultValue: 'PENDING',
+        values: ['PENDING', 'COMPLETED', 'VOIDED'],
+        validate: {
+          is: /^[\w\s]+$/gi
+        },
+        field: 'status'
+      },
     })
   },
   /**

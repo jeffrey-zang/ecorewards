@@ -9,3 +9,4 @@ export {
   type TransactionAttributes,
   type TransactionCreationAttributes
 } from '@/db/models/transaction.ts'
+export { Rewards, RewardsZod, type RewardsAttributes, type RewardsCreationAttributes } from '@/db/models/rewards.ts';
