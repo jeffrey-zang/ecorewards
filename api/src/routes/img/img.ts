@@ -1,3 +1,4 @@
+
 import express, { type Request, type Response } from 'express';
 import { logger } from '@/logger/index.ts';
 import { handleError, InternalServerError, runAsTransaction, ValidationError } from '@/utils/index.ts';
@@ -71,11 +72,11 @@ router.post('/img', memberAuthMiddleware, async (req: Request, res: Response) =>
       const memberId = req.memberId!;
       const transactionPayload = {
         category: "Receipt",
-        description: `Used public transit`,
-        points: 1000,
+        description: `Scanned receipt of $${jsonResponse.totalCost}`,
+        points: jsonResponse.points,
         // amount: 5000,
         rewardId: 11,
-        amount: -1000,
+        amount: -jsonResponse.points,
       } as TransactionCreationAttributes;
   
       await runAsTransaction(async (sequelizeTransaction: SequelizeTransaction) => {
