@@ -16,3 +16,5 @@ export {
   modifyTransaction,
   removeTransaction
 } from '@/db/providers/transaction.ts'
+export { countRewards, findRewards, findReward, addReward, modifyReward, removeReward } from '@/db/providers/rewards.ts'
+export { countUsers, findUsers, findUser, addUser, modifyUser, removeUser } from '@/db/providers/user.ts'

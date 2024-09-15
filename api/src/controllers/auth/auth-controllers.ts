@@ -2,8 +2,10 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import { Partner } from '@/db/models/index.ts'
+import { User } from '@/db/models/index.ts';
 import { findPartnerByEmail } from '@/db/providers/index.ts'
 import { ForbiddenError, NotFoundError } from '@/utils/index.ts'
+import { AnimalType } from '@/db/models/user.ts';
 
 const adminAuthController = async (email: string, password: string) => {
   if (email !== (process.env.ADMIN_EMAIL as string)) {
@@ -45,4 +47,38 @@ const partnerAuthController = async (email: string, password: string) => {
   })
 }
 
-export { adminAuthController, partnerAuthController }
+
+const userSignupController = async (email: string, password: string, animal: AnimalType) => {
+  const existingUser = await User.findOne({ where: { email } });
+  if (existingUser) {
+    throw new ForbiddenError(`User with email ${email} already exists!`);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({ email, password: hashedPassword, animal });
+
+  return { message: 'User created successfully', user };
+};
+
+const userLoginController = async (email: string, password: string) => {
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw new NotFoundError(`User with email ${email} does not exist!`);
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  if (!isPasswordCorrect) {
+    throw new ForbiddenError('Incorrect credentials!');
+  }
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET as jwt.Secret,
+    { expiresIn: '30m' }
+  );
+
+  return { token };
+};
+
+export { adminAuthController, partnerAuthController, userLoginController, userSignupController}

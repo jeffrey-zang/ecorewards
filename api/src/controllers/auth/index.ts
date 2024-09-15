@@ -1,1 +1,1 @@
-export { adminAuthController, partnerAuthController } from '@/controllers/auth/auth-controllers.ts'
+export { adminAuthController, partnerAuthController, userLoginController, userSignupController } from '@/controllers/auth/auth-controllers.ts'
