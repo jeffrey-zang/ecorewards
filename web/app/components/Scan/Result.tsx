@@ -79,11 +79,14 @@ export default function Result({ receiptData, onClose, className }: { receiptDat
                       <li key={index}>{product.name} - ${product.price.toFixed(2)}</li>
                     ))}
                   </ul>
-                  <p className="mt-1">
+                  <p className="mt-1 font-semibold">
                     Eco-Partner Total: ${receiptData.sponsoredCost.toFixed(2)}
                   </p>
                 </div>
               )}
+              <div className="font-semibold text-green-600">
+                Points Earned: {receiptData.points}
+              </div>
             </div>
           )}
         </div>
@@ -104,6 +107,13 @@ export default function Result({ receiptData, onClose, className }: { receiptDat
           />
         ))}
       </div>
+      
+      <style jsx>{`
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          100% { transform: translateY(-100vh); }
+        }
+      `}</style>
     </div>
   )
 }

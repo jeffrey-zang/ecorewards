@@ -9,6 +9,7 @@ import MilestonesList from "../components/Profile/MilestonesList";
 import avatar from "../assets/avatar.svg";
 // import EcoActionsHistory from "~/components/History/EcoActionsHistory";
 import { useNavigate } from "@remix-run/react";
+import { toast } from "sonner";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,46 +18,20 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const Navigate = () => {
+export default function Profile(props: any) {
+  const [profileData, setProfileData] = useState<any>({});
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/login");
-  })
-
-  return null;
-}
-
-export default function Profile(props: any) {
-  const [profileData, setProfileData] = useState<any>({});
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-
-  useEffect(() => {
     const fetchData = async () => {
-      setAccessToken(localStorage.getItem("accessToken"));
-      // try {
-      //   const response = await fetch(
-      //     `http://_/api/v1/members/${props?.memberId}`
-      //   );
-      //   const json = await response.json();
-      //   setProfileData(json || {});
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
-
-      console.log(localStorage.getItem("accessToken"));
+      if (!localStorage.getItem("accessToken")) {
+        navigate("/login");
+      }
     };
 
     fetchData();
   }, []);
-
-  if (!accessToken) {
-    return (
-      <Navigate />
-    )      // <div>asdf</div>
-    // return redirect("/login");
-    // return redirect("/login");
-  }
 
   return (
     <Card>
@@ -82,7 +57,11 @@ export default function Profile(props: any) {
         <MilestonesList points={profileData?.points} />
       </CardContent>
       <div className="flex w-full">
-        <button className="m-8 mt-0 bg-red-100 p-2 rounded-md w-full">
+        <button className="m-8 mt-0 bg-red-100 p-2 rounded-md w-full" onClick={() => {
+          localStorage.removeItem('accessToken');
+          navigate('/login');
+          toast.success('Logged out successfully!');
+        }}>
           Log Out
         </button>
       </div>

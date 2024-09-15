@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -11,7 +11,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { toast  } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '~/components/ui/dropdown-menu';
+import { toast } from "sonner";
+import { ArrowDown } from "lucide-react";
+import { useNavigate } from "@remix-run/react";
 
 export default function AuthForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,12 +22,26 @@ export default function AuthForm() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [animal, setAnimal] = useState<number>(1);
+  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      if (localStorage.getItem("accessToken")) {
+        navigate('/profile');
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     setIsLoading(true);
 
-    const response = await fetch(window.ENV.API_URL + "/api/v1/auth", {
+    const response = await fetch(window.ENV.API_URL + "/api/v1/user-login", {
       method: "POST",
       body: JSON.stringify({
         email: email,
@@ -35,38 +52,39 @@ export default function AuthForm() {
       },
     });
 
-    console.log(response)
     if (response.ok) {
-      toast.success('Logged in successfully!')
+      toast.success('Logged in successfully!');
+      localStorage.setItem('accessToken', (await response.json()).token);
+      navigate('/');
     } else {
-      toast.error("An error occured.");
+      toast.error("An error occurred.");
     }
     setIsLoading(false);
   };
+
   const signUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     setIsLoading(true);
 
-    const response = await fetch(window.ENV.API_URL + "/api/v1/loyalty/partners", {
+    const response = await fetch(window.ENV.API_URL + "/api/v1/user-signup", {
       method: "POST",
       body: JSON.stringify({
         name: name,
         email: email,
         password: password,
-        address: "123 Margaret Avenue",
-        phone: "5193206800",
-        description: "hi",
+        animal: ['Turtle', 'Bird', 'Squirrel'][animal - 1],
       }),
       headers: {
-        Authorization: `Bearer asdf`,
         "Content-Type": "application/json",
       },
     });
 
     if (response.ok) {
-      toast.success('Account created successfully! Please log in to continue.')
+      localStorage.setItem('accessToken', (await response.json()).token);
+      toast.success('Account created successfully!');
+      navigate('/');
     } else {
-      toast.error("An error occured. This email may already be in use.");
+      toast.error("An error occurred. This email may already be in use.");
     }
     setIsLoading(false);
   };
@@ -76,7 +94,7 @@ export default function AuthForm() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Authentication</CardTitle>
-          <CardDescription>Sign up or log in to your account.</CardDescription>
+          <CardDescription>Log in or sign up to your account.</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
@@ -93,8 +111,8 @@ export default function AuthForm() {
                       id="login-email"
                       placeholder="Enter your email"
                       type="email"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -111,7 +129,7 @@ export default function AuthForm() {
                   </div>
                 </div>
                 <Button
-                  className="w-full mt-4"
+                  className="w-full mt-4 bg-green-600"
                   type="submit"
                   disabled={isLoading}
                 >
@@ -154,9 +172,23 @@ export default function AuthForm() {
                       required
                     />
                   </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="signup-animal">Favorite Animal</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="border p-2 rounded relative">
+                        {animal === 1 ? "Turtle" : animal === 2 ? "Bird" : "Squirrel"}
+                        <ArrowDown className="absolute right-2 top-1/4" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => setAnimal(1)}>Turtle</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setAnimal(2)}>Bird</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setAnimal(3)}>Squirrel</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
                 <Button
-                  className="w-full mt-4"
+                  className="w-full mt-4 bg-green-600"
                   type="submit"
                   disabled={isLoading}
                 >

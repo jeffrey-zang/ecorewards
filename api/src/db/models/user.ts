@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 // import { MEMBER_STATUS, addressRegex, nameRegex, phoneRegex } from '@/constants/index.ts'
 import { sequelize } from '@/db/index.ts'
-import { Member } from '@/db/models/index.ts'
+// import { Member } from '@/db/models/index.ts'
 import { zodIdSchema } from '@/utils/index.ts'
 
 extendZodWithOpenApi(z)
@@ -19,28 +19,31 @@ export enum AnimalType {
 
 interface UserAttributes {
   id: number
-  memberId: number
+  // memberId: number
   email: string
   password: string
-  animal: AnimalType
+  animal: string
+  createdAt: Date
+  updatedAt: Date
 }
 
-type UserCreationAttributes = Optional<UserAttributes, 'id' | 'memberId' | 'email' | 'password'>
+type UserCreationAttributes = Optional<UserAttributes, 'id' | 'email' | 'password' | 'createdAt' | 'updatedAt'>
 
 class User extends Model<UserAttributes, UserCreationAttributes> {
     declare id: number
-    declare memberId: number
+    // declare memberId: number
     declare email: string
     declare password: string
-    declare animal: AnimalType
+    declare animal: string
+    declare createdAt: Date
+    declare updatedAt: Date
 
-    static associate(models: { Member: typeof Member }) {
-        User.hasOne(models.Member, {
-            foreignKey: 'memberId',
-            onDelete: 'CASCADE'
-        })
-
-    }
+    // static associate(models: { Member: typeof Member }) {
+    //     User.hasOne(models.Member, {
+    //         foreignKey: 'memberId',
+    //         onDelete: 'CASCADE'
+    //     })
+    // }
 }
 
 User.init(
@@ -55,19 +58,19 @@ User.init(
         },
         field: 'id'
       },
-      memberId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Members',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        validate: {
-          isInt: true
-        },
-        field: 'member_id'
-      },
+      // memberId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: 'Members',
+      //     key: 'id'
+      //   },
+      //   onDelete: 'CASCADE',
+      //   validate: {
+      //     isInt: true
+      //   },
+      //   field: 'member_id'
+      // },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -88,6 +91,24 @@ User.init(
           isIn: [Object.keys(AnimalType)]
         },
         field: 'animal'
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        validate: {
+          isDate: true
+        },
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        validate: {
+          isDate: true
+        },
+        field: 'updated_at'
       }
     },
     {
@@ -100,11 +121,11 @@ User.init(
 
 const UserZod = z.object({
     id: zodIdSchema,
-    memberId: zodIdSchema,
+    // memberId: zodIdSchema,
     email: z.string().email().openapi({ example: 'user@example.com' }),
     password: z.string().min(8).openapi({ example: 'password123' }),
-    animal: z.nativeEnum(AnimalType)
-      .openapi({ example: AnimalType.Turtle }),
+    animal: z.enum(["Turtle", "Squirrel", "Bird", "Wolf", "Eagle"])
+      .openapi({ example: "Turtle" }),
 });
 
 export { User, UserZod, type UserAttributes, type UserCreationAttributes }

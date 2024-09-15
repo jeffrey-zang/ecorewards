@@ -11,16 +11,16 @@ module.exports = {
         primaryKey: true,
         field: 'id'
       },
-      memberId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'members',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        field: 'member_id'
-      },
+      // memberId: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: 'members',
+      //     key: 'id'
+      //   },
+      //   onDelete: 'CASCADE',
+      //   field: 'member_id'
+      // },
       email: {
         type: Sequelize.STRING,
         allowNull: false,

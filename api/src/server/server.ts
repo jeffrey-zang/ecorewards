@@ -14,6 +14,7 @@ import { partnerTransactionsRouter } from '@/routes/partner-transactions/index.t
 import { partnerRouter } from '@/routes/partners/index.ts'
 import { pointsRouter } from '@/routes/points/index.ts'
 import { imgRouter } from '@/routes/img/index.ts'
+import { userAuthRouter } from '@/routes/auth/user-auth.ts'
 
 const app = express()
 
@@ -57,5 +58,6 @@ app.use(`${ROUTE_PREFIX}`, partnersAdminRouter)
 app.use(`${ROUTE_PREFIX}`, membersAdminRouter)
 app.use(`${ROUTE_PREFIX}`, transactionsAdminRouter)
 app.use(`${ROUTE_PREFIX}`, imgRouter)
+app.use(`${ROUTE_PREFIX}`, userAuthRouter)
 
 export { app }

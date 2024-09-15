@@ -56,6 +56,8 @@ const userSignupController = async (email: string, password: string, animal: Ani
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  console.log("animal", animal);
+
   const user = await User.create({ email, password: hashedPassword, animal });
 
   return { message: 'User created successfully', user };

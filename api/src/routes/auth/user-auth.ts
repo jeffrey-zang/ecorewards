@@ -1,17 +1,19 @@
 import express, { type Request, type Response } from 'express'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+// import bcrypt from 'bcryptjs'
+// import jwt from 'jsonwebtoken'
+import { z } from 'zod'
 
 import { userSignupController, userLoginController } from '@/controllers/auth/index.ts'
 import { logger } from '@/logger/index.ts'
 import { handleError, zodCredentials } from '@/utils/index.ts'
+import { AnimalType } from '@/db/models/user.ts'
 
 const router = express.Router()
 
 router.post('/user-signup', async (req: Request, res: Response) => {
   try {
     const { email, password, animal } = zodCredentials.extend({
-      animal: z.enum(['Turtle', 'Squirrel', 'Bird', 'Wolf', 'Eagle'])
+      animal: z.string()
     }).parse(req.body)
 
     const result = await userSignupController(email, password, animal)

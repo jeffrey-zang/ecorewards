@@ -1,45 +1,45 @@
 import { Transaction as SequelizeTransaction, WhereOptions } from 'sequelize';
 import { User, UserCreationAttributes } from '@/db/models/index.ts';
 
-const countUsers = (where: WhereOptions<User>, memberId: number, sequelizeTransaction?: SequelizeTransaction) => {
-  return User.count({ where: { ...where, memberId }, transaction: sequelizeTransaction });
+const countUsers = (where: WhereOptions<User>, sequelizeTransaction?: SequelizeTransaction) => {
+  return User.count({ where: { ...where }, transaction: sequelizeTransaction });
 };
 
-const findUsers = (where: WhereOptions<User>, memberId: number, sequelizeTransaction?: SequelizeTransaction) => {
-  return User.findAll({ where: { ...where, memberId }, transaction: sequelizeTransaction, raw: true });
+const findUsers = (where: WhereOptions<User>, sequelizeTransaction?: SequelizeTransaction) => {
+  return User.findAll({ where: { ...where }, transaction: sequelizeTransaction, raw: true });
 };
 
 const findUser = (
   where: WhereOptions<User>,
-  memberId: number,
+  // memberId: number,
   userId: number,
   sequelizeTransaction?: SequelizeTransaction
 ) => {
   return User.findOne({
-    where: { ...where, id: userId, memberId },
+    where: { ...where, id: userId },
     transaction: sequelizeTransaction,
     raw: true
   });
 };
 
 const addUser = (
-  memberId: number,
+  // memberId: number,
   userPayload: UserCreationAttributes,
   sequelizeTransaction?: SequelizeTransaction
 ) => {
-  return User.create({ ...userPayload, memberId }, { transaction: sequelizeTransaction, raw: true }).then(
+  return User.create({ ...userPayload }, { transaction: sequelizeTransaction, raw: true }).then(
     (user) => user.get({ plain: true })
   );
 };
 
 const modifyUser = (
-  memberId: number,
+  // memberId: number,
   userId: number,
   userPayload: Partial<UserCreationAttributes>,
   sequelizeTransaction?: SequelizeTransaction
 ) => {
   return User.update(userPayload, {
-    where: { id: userId, memberId },
+    where: { id: userId },
     transaction: sequelizeTransaction,
     returning: true
   }).then(([, users]) => {
@@ -47,8 +47,8 @@ const modifyUser = (
   });
 };
 
-const removeUser = (memberId: number, userId: number, sequelizeTransaction?: SequelizeTransaction) => {
-  return User.destroy({ where: { id: userId, memberId }, transaction: sequelizeTransaction });
+const removeUser = (userId: number, sequelizeTransaction?: SequelizeTransaction) => {
+  return User.destroy({ where: { id: userId}, transaction: sequelizeTransaction });
 };
 
 export { countUsers, findUsers, findUser, addUser, modifyUser, removeUser };

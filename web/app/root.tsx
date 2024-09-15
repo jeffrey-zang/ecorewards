@@ -53,7 +53,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="flex h-screen items-center justify-center relative">
-        <Toaster />
+        <Toaster position="top-right" richColors={true} />
         <div className="flex flex-col md:hidden w-full h-full">
           <Header points={0} />
           {receiptData ? <Result className="min-h-full flex-1 overflow-auto" receiptData={receiptData} onClose={() => setReceiptData(null)} /> : 
