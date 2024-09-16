@@ -112,6 +112,7 @@ export default function Index() {
       })
     });
     console.log("transaction", res);
+    toast.success(`Bought ${reward.name} successfully`);
     setBal(balance - reward.points);
     setSpendActive(false);
     /*

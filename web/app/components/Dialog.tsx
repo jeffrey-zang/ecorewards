@@ -267,8 +267,8 @@ const WebcamComponent = ({
           video: {
             deviceId: deviceId ? { exact: deviceId } : undefined,
             facingMode: deviceId ? undefined : { ideal: "environment" },
-            width: { ideal: 1000 },
-            height: { ideal: 1400 },
+            width: { ideal: 540 },
+            height: { ideal: 960 },
             // aspectRatio: { ideal: 16 / 9 },
           },
         });
@@ -355,7 +355,7 @@ const WebcamComponent = ({
 
           if (!data.receipt) {
             toast.error("No receipt found in image. Please try again.");
-            setCaptured(false);
+            setCaptured(false)
             return;
           }
 
@@ -382,8 +382,8 @@ const WebcamComponent = ({
       )}
       {devices.length > 1 && (
         <div className="device-selector mt-2">
-          <label htmlFor="device">Choose Camera:</label>
-          <select id="device" className="bg-neutral-100 p-1 ml-1 cursor-pointer" onChange={handleDeviceChange} value={deviceId || ""}>
+          {/* <label htmlFor="device">Choose Camer a:</label> */}
+          <select id="device" className="bg-neutral-100 p-1 ml-1 cursor-pointer absolute top-8 z-[999] left-1/2 -translate-x-1/2 w-1/2" onChange={handleDeviceChange} value={deviceId || ""}>
             {devices.map((device) => (
               <option key={device.deviceId} value={device.deviceId}>
                 {device.label || `Camera ${device.deviceId}`}
@@ -396,15 +396,15 @@ const WebcamComponent = ({
       {/* Video Element */}
       <video
         ref={videoRef}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100svw" }}
         autoPlay
         muted
         playsInline
         onClick={captureImage}
-        className="hover:opacity-90 cursor-pointer transition-opacity"
+        className="hover:opacity-90 cursor-pointer transition-opacity absolute top-0 left-0"
       />
 
-      <button className="bg-green-100 p-2 rounded-lg mt-4 hover:bg-green-200 transition-colors" onClick={captureImage} disabled={captured}>Capture</button>
+      <button className="bg-green-100 p-2 rounded-lg mt-4 hover:bg-green-200 transition-colors absolute bottom-8 left-1/2 -translate-x-1/2" onClick={captureImage} disabled={captured}>Capture</button>
 
       {/* Device Selector */}
 

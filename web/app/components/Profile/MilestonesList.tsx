@@ -21,7 +21,7 @@ const ecoAchievementNames = [
     const baseMilestone = 0;
   
     for (let i = 0; i < 5; i++) {
-      const milestonePoints = baseMilestone + ((i + 1) * 100);
+      const milestonePoints = baseMilestone + ((i + 1) * 1000);
   
       const name = ecoAchievementNames[i % ecoAchievementNames.length];
   
