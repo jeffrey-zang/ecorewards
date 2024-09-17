@@ -1,3 +1,6 @@
+# EcoRewards
+Created in 36h for [Hack the North 2024](https://devpost.com/software/ecorewards-t0qw26). Won Best use of RBC's Avion Rewards API.
+
 ## 🌱 Inspiration
 With the ongoing climate crisis, we recognized a major gap in the incentives for individuals to make greener choices in their day-to-day lives. People want to contribute to the solution, but without tangible rewards, it can be hard to motivate long-term change. That's where we come in! We wanted to create a fun, engaging, and rewarding way for users to reduce their carbon footprint and make eco-friendly decisions.
 
